@@ -1,40 +1,24 @@
 package com.q7w.Entity;
 
 
+import lombok.Data;
+
 import javax.persistence.*;
+import java.io.Serializable;
+
 /**
  * @author xiaogu
  * @date 2020/11/27 14:32
  **/
 @Entity(name = "t_role")
-public class Role {
+@Data
+public class Role extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long id;//角色id
     private String name;
-    private String nameZh;
+    private String description;
+    private Integer adminCount;
+    private Integer status;
 
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getNameZh() {
-        return nameZh;
-    }
-
-    public void setNameZh(String nameZh) {
-        this.nameZh = nameZh;
-    }
 }

@@ -7,10 +7,15 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="ItemService" />
-        <module name="CommonTool" />
+        <module name="OrderService" />
         <module name="UserService" />
+        <module name="CommonModel" />
+        <module name="AuthService" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel target="8" />
+    <bytecodeTargetLevel target="8">
+      <module name="CommonTool" target="8" />
+      <module name="Q7Common" target="8" />
+    </bytecodeTargetLevel>
   </component>
 </project>

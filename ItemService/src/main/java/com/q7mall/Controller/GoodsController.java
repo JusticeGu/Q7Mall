@@ -2,8 +2,8 @@ package com.q7mall.Controller;
 
 import com.q7mall.Service.GoodsService;
 
-import com.q7mall.common.result.ExceptionMsg;
-import com.q7mall.common.result.ResponseData;
+import com.q7w.common.result.ExceptionMsg;
+import com.q7w.common.result.ResponseData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

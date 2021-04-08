@@ -1,9 +1,7 @@
 package com.q7w.Entity;
 
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,57 +11,21 @@ import java.util.List;
  * @author xiaogu
  * @date 2020/11/27 14:30
  **/
-@Entity(name = "t_user")
-public class User extends BaseEntity implements UserDetails {
+@Entity(name = "auth_user")
+public class User extends BaseEntity  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String password;
-    private boolean accountNonExpired;
-    private boolean accountNonLocked;
-    private boolean credentialsNonExpired;
-    private boolean enabled;
+    private boolean accountNonExpired;//是否过期
+    private boolean accountNonLocked;//是否锁定
+    private boolean credentialsNonExpired;//认证信息是否不存在
+    private boolean enabled;//是否可用
     @ManyToMany(fetch = FetchType.EAGER,cascade = CascadeType.PERSIST)
     private List<Role> roles;
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        for (Role role : getRoles()) {
-            authorities.add(new SimpleGrantedAuthority(role.getName()));
-        }
-        return authorities;
-    }
-    @Override
-    public String getPassword() {
-        return password;
-    }
 
-    @Override
-    public String getUsername() {
-        return username;
-    }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return accountNonExpired;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return accountNonLocked;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return credentialsNonExpired;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return enabled;
-    }
-    //省略其他 get/set 方法
 
     public Long getId() {
         return id;
