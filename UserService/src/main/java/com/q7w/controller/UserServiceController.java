@@ -5,6 +5,7 @@ import com.q7w.common.result.ResponseData;
 import com.q7w.common.service.RedisService;
 import io.swagger.annotations.Api;
 
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,7 @@ public class UserServiceController {
         redisService.set(key,value);
         return new ResponseData(ExceptionMsg.SUCCESS,"success");
     }
+    @ApiOperation("redis接口测试")
     @GetMapping("/rget")
     public ResponseData rget(String key){
         return new ResponseData(ExceptionMsg.SUCCESS,redisService.get(key));

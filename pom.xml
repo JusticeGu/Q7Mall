@@ -14,6 +14,7 @@
         <module>OrderService</module>
         <module>AuthService</module>
         <module>CommonModel</module>
+        <module>Items</module>
 
     </modules>
 

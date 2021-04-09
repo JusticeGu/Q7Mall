@@ -39,3 +39,14 @@ hystrix:
           strategy: SEMAPHORE
           thread:
             timeoutInMilliseconds: 60000
+
+# 自定义redis key
+redis:
+  database: q7mall
+  key:
+    authCode: 'authCode'
+    orderId: 'orderId'
+    member: 'member'
+  expire:
+    authCode: 90 # 验证码超期时间
+    common: 86400 # 24小时

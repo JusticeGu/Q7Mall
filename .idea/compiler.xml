@@ -6,7 +6,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="ItemService" />
+        <module name="Items" />
         <module name="OrderService" />
         <module name="UserService" />
         <module name="CommonModel" />
@@ -15,6 +15,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
       <module name="CommonTool" target="8" />
+      <module name="ItemService" target="8" />
       <module name="Q7Common" target="8" />
     </bytecodeTargetLevel>
   </component>
