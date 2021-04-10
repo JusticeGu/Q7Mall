@@ -8,5 +8,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  * @date 2021/3/31 12:15
  **/
 public interface BrandDAO extends JpaRepository<Brand,Integer> {
-    Brand findByBid(int bid);
+    Brand findByName(String brandname);
 }

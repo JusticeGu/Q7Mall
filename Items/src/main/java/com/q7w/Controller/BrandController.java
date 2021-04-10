@@ -33,19 +33,31 @@ public class BrandController {
     @ApiOperation("品牌查询")
     public ResponseData brandquery(@RequestParam String brandname){
         //逻辑
-        return new ResponseData(ExceptionMsg.SUCCESS,brandService.list());
+        return new ResponseData(ExceptionMsg.SUCCESS,brandService.querybrand(brandname));
     }
     @PostMapping("brandop")
     @ApiOperation("品牌添加")
     public ResponseData itemadd(@RequestBody Brand brand){
-        //逻辑
+        byte status = brandService.addbrand(brand);
+        switch (status) {
+            case 1:
+                return new ResponseData(ExceptionMsg.SUCCESS,"添加成功");
+            case 2:
+                return new ResponseData(ExceptionMsg.FAILED,"请勿重复提交");
+        }
         return new ResponseData(ExceptionMsg.SUCCESS,"添加成功");
     }
     @DeleteMapping("branddel")
     @ApiOperation("品牌删除")
     public ResponseData itemdel(@RequestParam int bid){
-        //逻辑
-        return new ResponseData(ExceptionMsg.SUCCESS,"删除成功");
+        byte status = brandService.delbrand(bid);
+        switch (status) {
+            case 1:
+                return new ResponseData(ExceptionMsg.SUCCESS,"删除成功");
+            case 2:
+                return new ResponseData(ExceptionMsg.FAILED,"品牌不存在/重复提交请确认后再试！");
+        }
+        return new ResponseData(ExceptionMsg.SUCCESS,"success");
     }
     @PutMapping("brandop")
     @ApiOperation("品牌修改")

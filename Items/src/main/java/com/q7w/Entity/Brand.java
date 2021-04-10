@@ -26,8 +26,8 @@ public class Brand extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3033545151355633270L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int bid;
-    private String brand_name;//品牌名称
+    private Integer bid;
+    private String name;//品牌名称
     private String logo;
     private String big_pic;//专区大图
     private int b_sort;

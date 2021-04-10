@@ -11,7 +11,7 @@ import java.util.List;
 public interface BrandService {
     public List<Brand> list();
     public byte addbrand(Brand brand);
-    public byte delbrand(int bid);
+    public byte delbrand(Integer bid);
     public byte modefybrand(Brand brand);
     public List<Brand> querybrand(String brandname);
 }
