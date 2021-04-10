@@ -24,7 +24,7 @@ import javax.persistence.*;
 public class Product_Contents {
     private static final long serialVersionUID = 3033545151355633270L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int cid;//c-id
     private int pid;
     private String content;

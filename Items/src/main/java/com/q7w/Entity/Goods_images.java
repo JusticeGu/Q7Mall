@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class Goods_images extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3033545151355633270L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private int goods_id;//商品ID
     private String link;//图片URL地址

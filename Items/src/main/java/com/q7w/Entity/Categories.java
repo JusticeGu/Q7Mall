@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author xiaogu
@@ -21,15 +22,15 @@ import javax.persistence.*;
 @ToString
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
 @ApiModel(value="商品分类",description="商品分类")
-public class Categories {
+public class Categories extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3033545151355633270L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private int pid;//父类id 0为顶级分类
-    private String cate_name;//分类名称
+    private String name;//分类名称
     private int leavel;//分类级别
-    private int sort;//排序字段
+    private int b_sort;//排序字段
     private int product_count;//商品数量
     private String unit_name;//商品单位
     private String description;//描述

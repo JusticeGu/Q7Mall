@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class Goods_sku extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3033545151355633270L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;//sku-id
     private int goods_id;//商品ID--大类id
     private String sp_data;//sku属性-JSON数组

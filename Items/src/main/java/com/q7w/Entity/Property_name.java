@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class Property_name extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3033545151355633270L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private String title;//属性名
     private int cate_id;//分类ID

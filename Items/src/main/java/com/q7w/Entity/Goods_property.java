@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class Goods_property extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3033545151355633270L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
     private int pid;// 商品大类 id
     private int prop_name_id;//属性名id

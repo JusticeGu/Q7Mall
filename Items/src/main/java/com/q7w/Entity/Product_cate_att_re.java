@@ -25,7 +25,7 @@ import java.io.Serializable;
 public class Product_cate_att_re extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3033545151355633270L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;//id
     private int cate_id;//分类id
     private int attribute_id;//属性id
