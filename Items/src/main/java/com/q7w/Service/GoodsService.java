@@ -10,7 +10,7 @@ import java.util.List;
  **/
 public interface GoodsService {
     public List<Goods> list();
-    public byte addGoods();
+    public byte addGoods(Goods goods);
     public byte delgoods();
     public byte modifygoods();
     public List<Goods> listbyname(String name);

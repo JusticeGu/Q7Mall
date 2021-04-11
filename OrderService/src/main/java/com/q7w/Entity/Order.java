@@ -1,4 +1,4 @@
-package com.q7mall.Entity;
+package com.q7w.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -25,7 +25,7 @@ public class Order extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long oid; //订单号
-    private int sku_id; //SKU ID
+    private Integer sku_id; //SKU ID
     private Long uid;//用户id
     private int source;//订单来源
     private byte type;//订单类型 1-实物 2-站内虚拟 3-站外商品 4-卡密

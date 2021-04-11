@@ -28,9 +28,18 @@ public class GoodsController {
     }
     @PostMapping("itemsadd")
     @ApiOperation("商品添加")
-    public ResponseData itemadd(@RequestBody Product product){
-        //逻辑
-        return new ResponseData(ExceptionMsg.SUCCESS,goodsService.list());
+    public ResponseData itemadd(@RequestBody Goods product){
+            byte status = goodsService.addGoods(product);
+            switch (status) {
+                    case 1:
+                        return new ResponseData(ExceptionMsg.SUCCESS, "添加成功");
+                    case 2:
+                        return new ResponseData(ExceptionMsg.FAILED, "商品已存在，请勿重复提交");
+                    case 3:
+                        return new ResponseData(ExceptionMsg.FAILED, "所选品牌不存在，请重试！");
+                }
+                return new ResponseData(ExceptionMsg.SUCCESS,"添加成功");
+
     }
 
 

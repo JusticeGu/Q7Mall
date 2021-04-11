@@ -1,4 +1,4 @@
-package com.q7mall.Entity;
+package com.q7w.Entity;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

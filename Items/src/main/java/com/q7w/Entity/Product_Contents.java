@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * @author xiaogu
@@ -21,11 +22,12 @@ import javax.persistence.*;
 @ToString
 @JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
 @ApiModel(value="商品描述类",description="商品描述类")
-public class Product_Contents {
+public class Product_Contents extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3033545151355633270L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int cid;//c-id
     private int pid;
     private String content;
+
 }

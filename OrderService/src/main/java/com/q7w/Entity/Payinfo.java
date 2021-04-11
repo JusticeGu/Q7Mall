@@ -1,4 +1,4 @@
-package com.q7mall.Entity;
+package com.q7w.Entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

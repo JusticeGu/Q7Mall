@@ -10,6 +10,8 @@ import java.util.List;
  **/
 public interface BrandService {
     public List<Brand> list();
+    public boolean isexistbyid(Integer bid);
+    public boolean isexistbyname(String name);
     public byte addbrand(Brand brand);
     public byte delbrand(Integer bid);
     public byte modefybrand(Brand brand);

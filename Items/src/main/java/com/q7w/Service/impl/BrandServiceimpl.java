@@ -24,6 +24,17 @@ public class BrandServiceimpl implements BrandService {
     public List<Brand> list() {
         return brandDAO.findAll();
     }
+    @Override
+    public boolean isexistbyid(Integer bid){
+        if (brandDAO.findById(bid).isPresent()){return true;}
+        return false;
+    }
+
+    @Override
+    public boolean isexistbyname(String name) {
+        if (brandDAO.findByName(name).equals(null)){return false;}
+        return true;
+    }
 
     @Override
     public byte addbrand(Brand brand) {

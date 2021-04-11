@@ -1,5 +1,6 @@
 package com.q7w.Entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author xiaogu
@@ -33,5 +35,10 @@ public class Brand extends BaseEntity implements Serializable {
     private int b_sort;
     private int product_count;//商品数量
     private boolean varify;//是否名牌
+    @JsonIgnore
+    @OneToMany(mappedBy = "brand",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
+    //级联保存、更新、删除、刷新;延迟加载。当删除用户，会级联删除该用户的所有文章
+    //拥有mappedBy注解的实体类为关系被维护端
+    private List<Goods> goodsList;//文章列表
 
 }

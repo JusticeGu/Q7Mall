@@ -1,4 +1,4 @@
-package com.q7mall;
+package com.q7w;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

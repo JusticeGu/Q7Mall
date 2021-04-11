@@ -1,4 +1,4 @@
-package com.q7mall.config;
+package com.q7w.config;
 
 
 import com.q7w.common.config.BaseSwaggerConfig;
