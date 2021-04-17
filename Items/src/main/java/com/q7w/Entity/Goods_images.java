@@ -27,7 +27,7 @@ public class Goods_images extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    private int goods_id;//商品ID
+    private int gid;//商品ID
     private String link;//图片URL地址
     private int position;//图片位置
     private boolean is_master;//是否主图
