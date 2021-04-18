@@ -4,10 +4,17 @@ import com.q7w.Entity.Brand;
 import com.q7w.Service.BrandService;
 import com.q7w.common.result.ExceptionMsg;
 import com.q7w.common.result.ResponseData;
+import com.q7w.rabbit.SenderA;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
 
 /**
  * @author xiaogu
@@ -19,15 +26,29 @@ import org.springframework.web.bind.annotation.*;
 public class BrandController {
     @Autowired
     BrandService brandService;
+    @Autowired
+    SenderA senderA;
     @GetMapping("/")
     public ResponseData brandindex(){
         return new ResponseData(ExceptionMsg.SUCCESS,"品牌服务接口");
     }
+    @GetMapping("/mqtest")
+    @ApiOperation("品牌查询")
+    public ResponseData mqtest(@RequestParam String brandname){
+        HashMap map = new HashMap();
+        senderA.sendmsg(1,1,brandname,map);
+        //逻辑
+        return new ResponseData(ExceptionMsg.SUCCESS,"队列已上传");
+    }
     @GetMapping("/list")
     @ApiOperation("品牌列表")
-    public ResponseData listitem(){
-        //逻辑
-        return new ResponseData(ExceptionMsg.SUCCESS,brandService.list());
+    public ResponseData listitem(@RequestParam(value = "start",defaultValue = "0")Integer start,
+                                 @RequestParam(value = "num",defaultValue = "10")Integer num){
+        start = start<0?0:start;
+        Sort sort = Sort.by(Sort.Direction.DESC, "bid");
+        Pageable pageable = PageRequest.of(start, num, sort);
+            Page<Brand> page = brandService.list(pageable);
+        return new ResponseData(ExceptionMsg.SUCCESS,page);
     }
     @GetMapping("/findbrandname")
     @ApiOperation("品牌查询")

@@ -28,6 +28,7 @@ public class Goods_sku extends BaseEntity implements Serializable {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;//sku-id
     private int goodsid;//商品ID--大类id
+    private String skuname;//sku名称
     private String sp_data;//sku属性-JSON数组
     private int stock;//库存
     private int low_stocl;//预警库存

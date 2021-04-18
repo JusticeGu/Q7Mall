@@ -19,7 +19,6 @@ import java.util.List;
 @NoArgsConstructor
 public class Product {
     private Goods goodsinfo;
-    private Goods_images goodimg;
-    private Hashtable goodsproperty;
+    private List<Goods_images> goodimg;
     private List<Goods_sku> goods_skus;
 }

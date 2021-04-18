@@ -1,12 +1,11 @@
 package com.q7w.Service.impl;
 
+import com.q7w.DTO.Product;
 import com.q7w.Dao.BrandDAO;
 import com.q7w.Dao.GoodsDAO;
 import com.q7w.Entity.Goods;
 import com.q7w.Entity.Product_Contents;
-import com.q7w.Service.BrandService;
-import com.q7w.Service.GoodsService;
-import com.q7w.Service.UserFeign;
+import com.q7w.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +24,10 @@ public class GoodsServiceimpl implements GoodsService {
     UserFeign userFeign;
     @Autowired
     BrandService brandService;
+    @Autowired
+    ImgService imgService;
+    @Autowired
+    SkuService skuService;
 
     @Override
     public List<Goods> list() {
@@ -49,22 +52,35 @@ public class GoodsServiceimpl implements GoodsService {
     }
 
     @Override
+    public Product iteminfo(int gid) {
+        Product product = new Product();
+        product.setGoodsinfo(goodsDAO.findById(gid));
+        product.setGoodimg(imgService.listallbyid(gid));
+        product.setGoods_skus(skuService.skuquery(gid));
+        return product;
+    }
+
+    @Override
     public byte delgoods() {
+        //TODO
         return 0;
     }
 
     @Override
     public byte modifygoods() {
+        //TODO
         return 0;
     }
 
     @Override
     public List<Goods> listbyname(String name) {
+        //TODO
         return null;
     }
 
     @Override
     public List<Goods> listbyid(int id) {
+        //TODO
         return null;
     }
 }

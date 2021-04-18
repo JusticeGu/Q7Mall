@@ -10,7 +10,10 @@ import java.util.List;
  **/
 public interface SkuService {
     public List<Goods_sku> listall();
+    public List<Goods_sku> skuquery(Integer gid);
+    public int newsku(Goods_sku goods_sku);
     public int queryskustock(int sid);
     public int skucut(int sid,int count);
     public boolean isexist(int sid);
+
 }

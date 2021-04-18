@@ -1,6 +1,8 @@
 package com.q7w.Service;
 
 import com.q7w.Entity.Order;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -10,5 +12,8 @@ import java.util.List;
  **/
 public interface OrderService {
     public int createorder(Order order);
-    public List<Order> listall();
+    public int createorder( int skuid,String buycode);
+    public Page<Order> listall(Pageable pageable);
+    public List<Order> querybyid(Long oid);
+    public List<Order> querybyuser(Integer uid);
 }

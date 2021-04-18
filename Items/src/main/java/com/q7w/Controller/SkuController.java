@@ -7,9 +7,7 @@ import com.q7w.common.result.ResponseData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author xiaogu
@@ -29,14 +27,27 @@ public class SkuController {
     }
     @GetMapping("/query")
     @ApiOperation("SKU查询")
-    public ResponseData skuquery(int gid){
+    public ResponseData skuquery(Integer gid){
         //逻辑
-        return new ResponseData(ExceptionMsg.SUCCESS,skuService.listall());
+        return new ResponseData(ExceptionMsg.SUCCESS,skuService.skuquery(gid));
     }
-    @GetMapping("/skuadd")
-    @ApiOperation("SKU新增")
-    public ResponseData addsku(Goods_sku goods_sku){
+    @GetMapping("/Fquery")
+    @ApiOperation("SKU查询-Feign")
+    public int Feignskuquery(Integer gid){
         //逻辑
-        return new ResponseData(ExceptionMsg.SUCCESS,skuService.listall());
+        return skuService.queryskustock(gid);
+    }
+
+    @PostMapping("/skuadd")
+    @ApiOperation("SKU新增")
+    public ResponseData addsku(@RequestBody Goods_sku goods_sku){
+        //逻辑
+        return new ResponseData(ExceptionMsg.SUCCESS,skuService.newsku(goods_sku));
+    }
+    @PostMapping("/skuup")
+    @ApiOperation("SKU库存更新")
+    public ResponseData upskustock(@RequestBody Goods_sku goods_sku){
+        //逻辑
+        return new ResponseData(ExceptionMsg.SUCCESS,"库存更新成功");
     }
 }

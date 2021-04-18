@@ -20,6 +20,11 @@ import org.springframework.web.bind.annotation.*;
 public class GoodsController {
     @Autowired
     GoodsService goodsService;
+    @GetMapping("/itemsinfo")
+    @ApiOperation("商品信息")
+    public ResponseData itemsinfo(int gid){
+        return new ResponseData(ExceptionMsg.SUCCESS,goodsService.iteminfo(gid));
+    }
     @GetMapping("/list")
     @ApiOperation("商品列表")
     public ResponseData listitem(){

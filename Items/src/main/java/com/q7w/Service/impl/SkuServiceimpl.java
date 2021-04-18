@@ -24,11 +24,20 @@ public class SkuServiceimpl implements SkuService {
     public List<Goods_sku> listall() {
         return skudao.findAll();
     }
-
+    @Override
+    public List<Goods_sku> skuquery(Integer gid){
+        return skudao.findAllByGoodsid(gid);
+    }
     @Override
     public boolean isexist(int sid) {
         if (skudao.findById(sid).equals(null)){return false;}
         return true;
+    }
+
+    @Override
+    public int newsku(Goods_sku goods_sku) {
+        skudao.save(goods_sku);
+        return 1;
     }
 
     @Override

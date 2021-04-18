@@ -5,6 +5,8 @@ import com.q7w.Entity.Brand;
 import com.q7w.Service.BrandService;
 import com.q7w.Service.UserFeign;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -21,8 +23,8 @@ public class BrandServiceimpl implements BrandService {
     @Autowired
     UserFeign userFeign;
     @Override
-    public List<Brand> list() {
-        return brandDAO.findAll();
+    public Page<Brand> list(Pageable pageable) {
+        return brandDAO.findAll(pageable);
     }
     @Override
     public boolean isexistbyid(Integer bid){
@@ -67,7 +69,11 @@ public class BrandServiceimpl implements BrandService {
     }
 
     @Override
-    public List<Brand> querybrand(String brandname) {
-        return null;
+    public List<Brand> querybrand(String brandname) { return brandDAO.findAllByName(brandname);
+    }
+
+    @Override
+    public int updateptnum(int bid, int op, int num) {
+        return 0;
     }
 }

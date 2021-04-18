@@ -20,7 +20,10 @@ public class ImgServiceimpl implements ImgService {
     public List<Goods_images> listallbyid(int gid) {
         return imgDao.findAllByGid(gid);
     }
-
+    @Override
+    public List<Goods_images> newitemtop10(){
+        return imgDao.least10item();
+    }
     @Override
     public int uploadimg(int gid, String url,boolean is_master,int pos) {
         Goods_images goods_images = new Goods_images();
