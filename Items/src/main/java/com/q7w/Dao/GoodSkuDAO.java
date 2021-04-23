@@ -11,6 +11,7 @@ import java.util.List;
  **/
 public interface GoodSkuDAO extends JpaRepository<Goods_sku,Integer> {
     Goods_sku findById(int id);
+    Goods_sku findBySkuname(String name);
     List<Goods_sku> findAllByGoodsid(int gid);
 
 }

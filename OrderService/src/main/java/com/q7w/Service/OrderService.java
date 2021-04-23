@@ -12,11 +12,16 @@ import java.util.List;
  **/
 public interface OrderService {
     public int test(Integer sid);
+    public Order querybuid(Long oid);
     public int createorder(Order order);
-    public int createorder( int skuid,String buycode);
+    public int createorder(int skuid,String buycode);
+    public int createorder(int skuid,int num);
     public Long corder(Long sku);
     public int cancelorder(Long oid);
     public Page<Order> listall(Pageable pageable);
     public List<Order> querybyid(Long oid);
     public List<Order> querybyuser(Integer uid);
+    public int updateorder(Long orderid,Long payid,String content,int status);
+    public int getorderstatus(Long orderid);
+    public boolean message(Long oid);
 }

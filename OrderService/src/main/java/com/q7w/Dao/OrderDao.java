@@ -11,4 +11,9 @@ import java.util.List;
  **/
 public interface OrderDao extends JpaRepository<Order,Integer> {
     List<Order> findAllByOid(Long oid);
+    Order findByOid(Long oid);
+    List<Order> findAllByStatus(int status);
+    List<Order> findAllByUid(Long uid);
+    List<Order> findAllByBusstype(int busstype);
+
 }

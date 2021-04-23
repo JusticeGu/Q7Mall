@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @date 2021/3/31 16:15
  **/
 @Entity
-@Table(name = "Pay_info")
+@Table(name = "Payinfo")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,10 +23,10 @@ import java.io.Serializable;
 public class Payinfo extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3033545151355633270L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long pid; //流水号
     private Long price;//金额*100
-    private int oid; //订单 ID
+    private Long oid; //订单 ID
     private Long uid;//操作用户id
     private Long adid;//操作人员id
     private int source;//操作来源

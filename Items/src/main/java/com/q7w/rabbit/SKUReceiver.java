@@ -1,6 +1,7 @@
 
 package com.q7w.rabbit;
 
+import com.q7w.Service.SkuService;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,14 @@ import java.util.Map;
 
 @Component
 @RabbitListener(queues ="Item_queue")//监听QueueHello的消息队列
-public class PaperReceiver {
-
+public class SKUReceiver {
+    @Autowired
+    SkuService skuService;
     @RabbitHandler//@RabbitHandler来实现具体消费
     public void QueueReceiver(Map res) {
-
         try {
-            System.out.println("Mail：已接收到来自队列正在处理..."+res);
+            System.out.println("正在处理SKU库存"+ (Integer)res.get("skuid")+":"+(Integer)res.get("op"));
+           // skuService.opsql( (Integer)res.get("skuid"), (Integer)res.get("op"), (Integer)res.get("num"))
         }catch (Exception e){
             System.out.println("接收异常："+e);
         }

@@ -1,5 +1,6 @@
 package com.q7w.Service;
 
+
 import com.q7w.Entity.Goods_sku;
 
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
  * @date 2021/4/11 18:55
  **/
 public interface SkuService {
+    public Goods_sku findbyidorname(int sid);
+    public Goods_sku findbyidorname(String name);
     public List<Goods_sku> listall();
     public List<Goods_sku> skuquery(Integer gid);
     public int newsku(Goods_sku goods_sku);

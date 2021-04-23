@@ -1,9 +1,11 @@
 package com.q7w.Service.impl;
 
 import com.q7w.Dao.GoodSkuDAO;
+import com.q7w.Entity.Goods;
 import com.q7w.Entity.Goods_sku;
 import com.q7w.Service.GoodsService;
 import com.q7w.Service.SkuService;
+import com.q7w.common.exception.GlobalException;
 import com.q7w.common.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,25 @@ public class SkuServiceimpl implements SkuService {
     GoodsService goodsService;
     @Autowired
     RedisService redisService;
+
+    @Override
+    public Goods_sku findbyidorname(int sid) {
+        Goods_sku sku = skudao.findById(sid);
+        if (sku==null){
+            throw new GlobalException("805X05","SKU不存在");
+        }
+        return sku;
+    }
+
+    @Override
+    public Goods_sku findbyidorname(String name) {
+        Goods_sku sku = skudao.findBySkuname(name);
+        if (sku==null){
+            throw new GlobalException("805X05","SKU不存在");
+        }
+        return sku;
+    }
+
     @Override
     public List<Goods_sku> listall() {
         return skudao.findAll();
@@ -98,6 +119,18 @@ public class SkuServiceimpl implements SkuService {
 
     @Override
     public int opsql(int sid, int op, int num) {
+        if(op==1){
+            Goods_sku goods_sku = findbyidorname(sid);
+            goods_sku.setStock(goods_sku.getStock()-num);
+            skudao.save(goods_sku);
+            return 1;
+        }
+        else if(op ==2){
+            Goods_sku goods_sku = findbyidorname(sid);
+            goods_sku.setStock(goods_sku.getStock()+num);
+            skudao.save(goods_sku);
+            return 1;
+        }
         return 0;
     }
 }

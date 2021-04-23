@@ -13,5 +13,5 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Component
 public class ItemsFeignFallback implements ItemsFeign {
     @Override
-    public int skutest(Integer sid) { return -3; }
+    public int skustockcut(@RequestParam("skuid") int skuid,@RequestParam("num") int num) { return -3; }
 }

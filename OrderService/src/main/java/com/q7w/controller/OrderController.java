@@ -31,7 +31,7 @@ public class OrderController {
     public ResponseData listorder(@RequestParam(value = "start",defaultValue = "0")Integer start,
                                  @RequestParam(value = "num",defaultValue = "10")Integer num){
         start = start<0?0:start;
-        Sort sort = Sort.by(Sort.Direction.DESC, "bid");
+        Sort sort = Sort.by(Sort.Direction.DESC, "oid");
         Pageable pageable = PageRequest.of(start, num, sort);
         Page<Order> page = orderService.listall(pageable);
         return new ResponseData(ExceptionMsg.SUCCESS,page);
@@ -43,7 +43,12 @@ public class OrderController {
     }
     @GetMapping("/createorder")
     @ApiOperation("生成订单")
-    public ResponseData createorder(Long oid){
-        return new ResponseData(ExceptionMsg.SUCCESS,orderService.corder(oid));
+    public ResponseData createorder(int skuid,int num){
+        return new ResponseData(ExceptionMsg.SUCCESS,orderService.createorder(skuid, num));
+    }
+    @GetMapping("/paidorder")
+    @ApiOperation("订单支付确认")
+    public ResponseData paidorder(Long oid){
+        return new ResponseData(ExceptionMsg.SUCCESS,orderService.updateorder(oid,123L,"支付测试",1));
     }
 }

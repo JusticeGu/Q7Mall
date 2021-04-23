@@ -43,6 +43,13 @@ public class SkuController {
         //逻辑
         return sid;
     }
+    @GetMapping("/skucut")
+    @ApiOperation("SKU库存锁定")
+    public int skustockcut(@RequestParam("skuid") int skuid,@RequestParam("num") int num){
+        int status = skuService.skucut(skuid,num);
+        if (status>=0){return 1;}
+        else {return -1;}
+    }
     @GetMapping("/Fquery")
     @ApiOperation("SKU查询-Feign")
     public int Feignskuquery(Integer gid){

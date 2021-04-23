@@ -4,7 +4,7 @@ import com.q7w.Entity.Brand;
 import com.q7w.Service.BrandService;
 import com.q7w.common.result.ExceptionMsg;
 import com.q7w.common.result.ResponseData;
-import com.q7w.rabbit.SenderA;
+import com.q7w.rabbit.SKUSender;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class BrandController {
     @Autowired
     BrandService brandService;
     @Autowired
-    SenderA senderA;
+    SKUSender SKUSender;
     @GetMapping("/")
     public ResponseData brandindex(){
         return new ResponseData(ExceptionMsg.SUCCESS,"品牌服务接口");
@@ -36,7 +36,7 @@ public class BrandController {
     @ApiOperation("品牌查询")
     public ResponseData mqtest(@RequestParam String brandname){
         HashMap map = new HashMap();
-        senderA.sendmsg(1,1,brandname,map);
+        SKUSender.sendmsg(1,1,1);
         //逻辑
         return new ResponseData(ExceptionMsg.SUCCESS,"队列已上传");
     }

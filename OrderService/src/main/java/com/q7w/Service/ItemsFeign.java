@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
  **/
 @FeignClient(value = "ItemsCoreService",configuration = FeignConfiguration.class,fallback = ItemsFeignFallback.class)
 public interface ItemsFeign {
-    @GetMapping("/api/sku/stock/test")
-    int skutest(@RequestParam("sid") Integer sid);
+    @GetMapping("/api/sku/skucut")
+    int skustockcut(@RequestParam("skuid") int skuid,@RequestParam("num") int num);
 }
+

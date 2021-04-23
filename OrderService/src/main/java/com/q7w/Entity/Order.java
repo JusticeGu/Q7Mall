@@ -14,7 +14,7 @@ import java.io.Serializable;
  * @date 2021/3/31 16:14
  **/
 @Entity
-@Table(name = "Order_info")
+@Table(name = "Orderinfo")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -23,17 +23,16 @@ import java.io.Serializable;
 public class Order extends BaseEntity implements Serializable {
     private static final long serialVersionUID = 3033545151355633270L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long oid; //订单号
-    private Integer sku_id; //SKU ID
+    private Integer skuid; //SKU ID
     private Long uid;//用户id
-    private int source;//订单来源
+    private int odsource;//订单来源
     private byte type;//订单类型 1-实物 2-站内虚拟 3-站外商品 4-卡密
     private int busstype;//交易类型 1-正常交易 2-抽签 3-队列人工审核交易 4-其他
     private Long price;//订单金额*100
-    private Long original;//原价*100
-    private String coupon_code;//优惠券码
-    private boolean transport;//是否包邮
+    private Long oriprice;//原价*100
+    private String cpcode;//优惠券码
+    private boolean transis;//是否包邮
     private String transcode;//物流码
     private int status;//订单状态 -3-支付失败/取消订单 -2抽选未选中/抢购失败 -1官方撤销 0-已创建未支付 1-支付成功-正在处理 2-支付成功-未发货 3-正在运输 4-已完成(结单) 5-已评价  6-已退款
     private Long payid;//支付信息id

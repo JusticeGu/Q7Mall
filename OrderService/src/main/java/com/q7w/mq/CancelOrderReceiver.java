@@ -21,8 +21,21 @@ public class CancelOrderReceiver {
     OrderService orderService;
     @RabbitHandler
     public void handle(Long orderId){
-        LOGGER.info("正在审核订单：orderId:{}",orderId);
-        orderService.cancelorder(orderId);
+        try {
+            LOGGER.info("正在审核订单：orderId:{}",orderId);
+            int status = orderService.getorderstatus(orderId);
+            if (status == 0){
+                LOGGER.info("逾期订单，加入取消队列：orderId:{}",orderId);
+                orderService.cancelorder(orderId);
+            }else if(status == 1){
+                LOGGER.info("已支付订单，放行：orderId:{}",orderId);
+            }else {
+                LOGGER.info("重复消费订单：orderId:{}",orderId);
+            }
+        }catch (Exception e){
+            LOGGER.info("订单不存在：orderId:{}",orderId);
+        }
+
     }
 }
 
