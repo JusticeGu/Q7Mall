@@ -41,4 +41,9 @@ public class OrderController {
     public ResponseData queryorderbyid(Long oid){
         return new ResponseData(ExceptionMsg.SUCCESS,orderService.querybyid(oid));
     }
+    @GetMapping("/createorder")
+    @ApiOperation("生成订单")
+    public ResponseData createorder(Long oid){
+        return new ResponseData(ExceptionMsg.SUCCESS,orderService.corder(oid));
+    }
 }

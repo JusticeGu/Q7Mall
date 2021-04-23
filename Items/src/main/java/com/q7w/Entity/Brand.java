@@ -39,6 +39,6 @@ public class Brand extends BaseEntity implements Serializable {
     @OneToMany(mappedBy = "brand",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     //级联保存、更新、删除、刷新;延迟加载。当删除用户，会级联删除该用户的所有文章
     //拥有mappedBy注解的实体类为关系被维护端
-    private List<Goods> goodsList;//文章列表
+    private List<Goods> goodsList;
 
 }

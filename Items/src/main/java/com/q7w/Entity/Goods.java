@@ -30,12 +30,14 @@ public class Goods extends BaseEntity implements Serializable {
     private String name;
     private float original;//原价
     private String tags;//标签
-    private boolean is_sale;//状态 1-是 0-否
-    private boolean is_seccut;//秒杀参数 0-非秒杀
+    private boolean sale;//状态 1-是 0-否
+    private boolean seccut;//秒杀参数 0-非秒杀
     private int busstype;//交易类型 1-正常交易 2-抽签 3-队列人工审核交易 4-其他
     private String saletype;//保障服务类别
     private int type;//1-实物商品 2-虚拟商品 3-虚拟卡 4-在线课程 5-第三方
+    private int status;//-1删除 0-被审核 1-正常
     private Long buytime;//开始上架时间
+    private Long stoptime;//下架时间
     @OneToOne(cascade=CascadeType.ALL)//People是关系的维护端，当删除 people，会级联删除 address
     @JoinColumn(name = "Product_Contents", referencedColumnName = "cid")//people中的address_id字段参考address表中的id字段
     private Product_Contents summary;//商品描述
@@ -44,6 +46,6 @@ public class Goods extends BaseEntity implements Serializable {
     private Brand brand;//品牌
     @ManyToOne(cascade={CascadeType.MERGE,CascadeType.REFRESH},optional=false)//可选属性optional=false,表示author不能为空。删除文章，不影响用户
     @JoinColumn(name="cid")//设置在cate表中的关联字段(外键)
-    private Categories cateid;//品牌
+    private Categories cateid;//分类
 
 }

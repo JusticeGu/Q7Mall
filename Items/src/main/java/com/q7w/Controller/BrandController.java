@@ -83,7 +83,7 @@ public class BrandController {
     @PutMapping("brandop")
     @ApiOperation("品牌修改")
     public ResponseData itemmodify(@RequestBody Brand brand){
-        //逻辑
+        brandService.modefybrand(brand);
         return new ResponseData(ExceptionMsg.SUCCESS,"修改成功");
     }
 

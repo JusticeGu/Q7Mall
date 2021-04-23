@@ -4,6 +4,7 @@ import com.q7w.Service.ItemsFeign;
 import com.q7w.common.result.ExceptionMsg;
 import com.q7w.common.result.ResponseData;
 import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.RequestParam;
 
 /**
  * @author xiaogu
@@ -12,7 +13,5 @@ import org.springframework.stereotype.Component;
 @Component
 public class ItemsFeignFallback implements ItemsFeign {
     @Override
-    public ResponseData skustockfeign() {
-        return new ResponseData(ExceptionMsg.SE_error,"熔断机制启动");
-    }
+    public int skutest(Integer sid) { return -3; }
 }

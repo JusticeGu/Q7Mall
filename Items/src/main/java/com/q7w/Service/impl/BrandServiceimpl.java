@@ -4,7 +4,9 @@ import com.q7w.Dao.BrandDAO;
 import com.q7w.Entity.Brand;
 import com.q7w.Service.BrandService;
 import com.q7w.Service.UserFeign;
+import com.q7w.common.exception.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -22,6 +24,29 @@ public class BrandServiceimpl implements BrandService {
     BrandDAO brandDAO;
     @Autowired
     UserFeign userFeign;
+
+    @Override
+    public Brand findbybidorname(Integer bid) {
+        Brand brand = brandDAO.findByBid(bid);
+        if (brand==null){
+                throw new GlobalException("805X01","品牌不存在");
+        }
+        return brand;
+    }
+
+    @Override
+    public Brand findbybidorname(String name) {
+        Brand brand = brandDAO.findByName(name);
+        if (brand==null){
+            try {
+                throw new GlobalException("805X01","品牌不存在");
+            } catch (GlobalException e) {
+                e.printStackTrace();
+            }
+        }
+        return brand;
+    }
+
     @Override
     public Page<Brand> list(Pageable pageable) {
         return brandDAO.findAll(pageable);
@@ -56,7 +81,7 @@ public class BrandServiceimpl implements BrandService {
         try{
         brandDAO.deleteById(bid);
             return 1;
-        }catch (Exception e)
+        }catch (EmptyResultDataAccessException e)
         {
             return 2;
         }
@@ -65,7 +90,11 @@ public class BrandServiceimpl implements BrandService {
 
     @Override
     public byte modefybrand(Brand brand) {
-        return 0;
+        Brand brandindb = findbybidorname(brand.getBid());
+     //   if (brandindb.equals(null)){return 2;}
+        brandindb = brand;
+        brandDAO.save(brandindb);
+        return 1;
     }
 
     @Override
@@ -74,6 +103,12 @@ public class BrandServiceimpl implements BrandService {
 
     @Override
     public int updateptnum(int bid, int op, int num) {
-        return 0;
+        Brand brand = brandDAO.findByBid(bid);
+        if (op==1){
+            brand.setProduct_count(brand.getProduct_count()+num);
+        }else if(op == 2){
+            brand.setProduct_count(brand.getProduct_count()-num);
+        }
+        return 1;
     }
 }

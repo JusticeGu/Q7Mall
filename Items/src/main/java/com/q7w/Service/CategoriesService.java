@@ -2,6 +2,7 @@ package com.q7w.Service;
 
 import com.q7w.Entity.Categories;
 
+
 import java.util.List;
 
 /**
@@ -9,6 +10,8 @@ import java.util.List;
  * @date 2021/4/1 19:22
  **/
 public interface CategoriesService {
+    public Categories findbyidorname(int cid);
+    public Categories findbyidorname(String name);
     public List<Categories> list();
     public byte add(Categories categories);
     public byte del(int id);

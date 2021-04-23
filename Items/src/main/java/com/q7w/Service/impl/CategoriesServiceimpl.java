@@ -2,8 +2,10 @@ package com.q7w.Service.impl;
 
 import com.q7w.Dao.CategoriesDAO;
 import com.q7w.Entity.Categories;
+import com.q7w.Entity.Goods;
 import com.q7w.Service.CategoriesService;
 import com.q7w.Service.UserFeign;
+import com.q7w.common.exception.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +25,26 @@ public class CategoriesServiceimpl implements CategoriesService {
     @Override
     public List<Categories> list() {
         return categoriesDAO.findAll();
+    }
+
+    @Override
+    public Categories findbyidorname(int cid) {
+        Categories categories = categoriesDAO.findById(cid);
+        if (categories==null){
+                throw new GlobalException("805X03","分类不存在");
+        }
+        return categories;
+    }
+
+    @Override
+    public Categories findbyidorname(String name) {
+        Categories categories = categoriesDAO.findByName(name);
+        if (categories==null){
+            if (categories==null){
+                throw new GlobalException("805X03","分类不存在");
+            }
+        }
+        return categories;
     }
 
     @Override
@@ -52,11 +74,14 @@ public class CategoriesServiceimpl implements CategoriesService {
 
     @Override
     public byte modify(Categories categories) {
-        return 0;
+        Categories categoriesindb = findbyidorname(categories.getCid());
+        categoriesindb = categories;
+        categoriesDAO.save(categoriesindb);
+        return 1;
     }
 
     @Override
     public Categories querybyname(String name) {
-        return null;
+        return findbyidorname(name);
     }
 }

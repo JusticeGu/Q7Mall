@@ -15,5 +15,10 @@ public interface SkuService {
     public int queryskustock(int sid);
     public int skucut(int sid,int count);
     public boolean isexist(int sid);
+    public int updatesql(int gid);
+    public int delsku(int sid);
+    public int delskulist(int gid);
+    public byte loadskutoredis(int gid);
+    public int opsql(int sid,int op,int num);
 
 }

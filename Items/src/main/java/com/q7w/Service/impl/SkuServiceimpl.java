@@ -2,6 +2,7 @@ package com.q7w.Service.impl;
 
 import com.q7w.Dao.GoodSkuDAO;
 import com.q7w.Entity.Goods_sku;
+import com.q7w.Service.GoodsService;
 import com.q7w.Service.SkuService;
 import com.q7w.common.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,14 +20,21 @@ public class SkuServiceimpl implements SkuService {
     @Autowired
     GoodSkuDAO skudao;
     @Autowired
+    GoodsService goodsService;
+    @Autowired
     RedisService redisService;
     @Override
     public List<Goods_sku> listall() {
         return skudao.findAll();
     }
     @Override
-    public List<Goods_sku> skuquery(Integer gid){
-        return skudao.findAllByGoodsid(gid);
+    public List<Goods_sku> skuquery(Integer gid) {
+        try {
+            return skudao.findAllByGoodsid(gid);
+        }catch (Exception e){
+            throw e;
+        }
+
     }
     @Override
     public boolean isexist(int sid) {
@@ -36,6 +44,7 @@ public class SkuServiceimpl implements SkuService {
 
     @Override
     public int newsku(Goods_sku goods_sku) {
+        goods_sku.setGoodsid(goodsService.findbyidorname(goods_sku.getGoodsid()).getId());
         skudao.save(goods_sku);
         return 1;
     }
@@ -51,6 +60,15 @@ public class SkuServiceimpl implements SkuService {
     }
 
     @Override
+    public byte loadskutoredis(int gid) {
+        List<Goods_sku> skus = skudao.findAllByGoodsid(gid);
+        for(Goods_sku sku:skus){
+            redisService.set("goods:sku:"+sku.getId(),sku.getStock(),goodsService.iteminfo(gid).getGoodsinfo().getStoptime());
+        }
+        return 1;
+    }
+
+    @Override
     public int skucut(int sid,int count) {
         int stock = queryskustock(sid);
         if (stock >0){
@@ -59,5 +77,27 @@ public class SkuServiceimpl implements SkuService {
             return (Integer)stock-count;
         }
         return stock-1;
+    }
+
+    @Override
+    public int updatesql(int gid) {
+        return 0;
+    }
+
+    @Override
+    public int delsku(int sid) {
+        skudao.deleteById(sid);
+        return 1;
+    }
+
+    @Override
+    public int delskulist(int gid) {
+        skudao.deleteAll(skudao.findAllByGoodsid(gid));
+        return 1;
+    }
+
+    @Override
+    public int opsql(int sid, int op, int num) {
+        return 0;
     }
 }

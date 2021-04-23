@@ -20,7 +20,7 @@ public class ResponseData extends Response {
         this.data = data;
     }
 
-    public  ResponseData(ExceptionMsg msg, Object data) {
+    public ResponseData(ExceptionMsg msg, Object data) {
         super(msg);
         this.data = data;
     }

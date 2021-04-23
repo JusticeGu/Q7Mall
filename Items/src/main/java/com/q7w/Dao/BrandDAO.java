@@ -11,5 +11,6 @@ import java.util.List;
  **/
 public interface BrandDAO extends JpaRepository<Brand,Integer> {
     List<Brand> findAllByName(String brandname);
+    Brand findByBid(Integer bid);
     Brand findByName(String brandname);
 }

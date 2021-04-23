@@ -11,8 +11,11 @@ import java.util.List;
  * @date 2021/4/11 18:25
  **/
 public interface OrderService {
+    public int test(Integer sid);
     public int createorder(Order order);
     public int createorder( int skuid,String buycode);
+    public Long corder(Long sku);
+    public int cancelorder(Long oid);
     public Page<Order> listall(Pageable pageable);
     public List<Order> querybyid(Long oid);
     public List<Order> querybyuser(Integer uid);

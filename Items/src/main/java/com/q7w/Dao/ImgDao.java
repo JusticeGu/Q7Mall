@@ -13,6 +13,7 @@ import java.util.List;
  **/
 public interface ImgDao extends JpaRepository<Goods_images,Integer> {
     List<Goods_images> findAllByGid(int gid);
+
     @Query(nativeQuery =true,value = "select * from goods_images order by create_time desc limit 10")
     List<Goods_images> least10item();
 }

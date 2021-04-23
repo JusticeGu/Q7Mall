@@ -3,14 +3,17 @@ package com.q7w.common.result;
 public enum ExceptionMsg {
     SUCCESS("200", "操作成功"),
     SUCCESS_GET("200", "数据获取成功DB"),
-    SUCCESS_RGET("200", "数据获取成功"),
     SUCCESS_LOGIN("200", "登录成功"),
+    FAILED_403("403","权限禁止访问"),
     FAILED("801","操作失败"),
-    ERROR("501","服务暂不可用"),
-    SE_error("502","保护机制拦截"),
     ParamError("802", "参数错误！"),
-    FileError("803","文件上传失败"),
-    FAILED_403("403","禁止访问！您暂时没有此接口的访问权限，请联系管理员"),;
+    BADERROR("803", "请求异常！"),
+    FileError("804","文件上传失败"),
+    EXCEPT("805","操作异常，请确认后重试"),
+    ERROR("500","系统异常!"),
+    ServiceERROR("501","服务暂不可用"),
+    SE_error("502","保护机制拦截"),
+    ContextError("503","内容审核机制"),;
     private ExceptionMsg(String code, String msg) {
         this.code = code;
         this.msg = msg;

@@ -11,6 +11,8 @@ import java.util.List;
  * @date 2021/3/31 12:12
  **/
 public interface BrandService {
+    public Brand findbybidorname(Integer bid);
+    public Brand findbybidorname(String name);
     public Page<Brand> list(Pageable pageable);
     public boolean isexistbyid(Integer bid);
     public boolean isexistbyname(String name);

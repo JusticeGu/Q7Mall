@@ -27,9 +27,21 @@ public class SkuController {
     }
     @GetMapping("/query")
     @ApiOperation("SKU查询")
-    public ResponseData skuquery(Integer gid){
+    public ResponseData skuquery(Integer sid){
         //逻辑
-        return new ResponseData(ExceptionMsg.SUCCESS,skuService.skuquery(gid));
+        return new ResponseData(ExceptionMsg.SUCCESS,skuService.skuquery(sid));
+    }
+    @GetMapping("/stock/query")
+    @ApiOperation("SKU库存查询")
+    public ResponseData skustockquery(@RequestParam Integer sid){
+        //逻辑
+        return new ResponseData(ExceptionMsg.SUCCESS,skuService.queryskustock(sid));
+    }
+    @GetMapping("/stock/test")
+    @ApiOperation("调用测试")
+    public int skutest(@RequestParam Integer sid){
+        //逻辑
+        return sid;
     }
     @GetMapping("/Fquery")
     @ApiOperation("SKU查询-Feign")

@@ -10,11 +10,13 @@ import java.util.List;
  * @date 2020/12/21 18:54
  **/
 public interface GoodsService {
+    public Goods findbyidorname(int gid);
+    public Goods findbyidorname(String name);
     public List<Goods> list();
     public Product iteminfo(int gid);
     public byte addGoods(Goods goods);
-    public byte delgoods();
-    public byte modifygoods();
+    public byte delgoods(int gid);
+    public byte modifygoods(int gid);
     public List<Goods> listbyname(String name);
     public List<Goods> listbyid(int id);
 }
