@@ -13,4 +13,5 @@ public interface CategoriesDAO extends JpaRepository<Categories,Integer> {
     Categories findById(int id);
     Categories findByName(String Catename);
     List<Categories> findAllByName(String Catename);
+    List<Categories> findAllByPid(int pid);
 }

@@ -23,10 +23,6 @@ public class TestController {
     @GetMapping("/get")
     @ApiOperation("Feign获取")
     public ResponseData getskuinfo(int sid){
-        int status = itemsFeign.skustockcut(sid,1);
-        if (status == 1){return new ResponseData(ExceptionMsg.SUCCESS,"库存已锁定请在指定时间内支付");}
-        else if(status == -1){return new ResponseData(ExceptionMsg.FAILED,status+":"+"库存不足");}
-        else {return new ResponseData(ExceptionMsg.FAILED,status+":"+"异常");}
-
+      return new ResponseData(ExceptionMsg.SUCCESS,itemsFeign.skutest(sid).toString());
     }
 }

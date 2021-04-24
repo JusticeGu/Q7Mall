@@ -1,6 +1,9 @@
 package com.q7w.common.result;
 
-public class ResponseData extends Response {
+import java.io.Serializable;
+
+public class ResponseData extends Response implements Serializable {
+    private static final long serialVersionUID = 3033545151355633270L;
     private Object data;
 
     public  ResponseData(Object data) {

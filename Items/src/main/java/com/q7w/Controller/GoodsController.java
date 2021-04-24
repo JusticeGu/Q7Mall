@@ -42,7 +42,7 @@ public class GoodsController {
     public ResponseData listitem_b(@RequestParam(value = "start",defaultValue = "0")Integer start,
                                    @RequestParam(value = "num",defaultValue = "10")Integer num){
         start = start<0?0:start;
-        Sort sort = Sort.by(Sort.Direction.DESC, "gid");
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(start, num, sort);
         Page<Goods> page = goodsService.list(pageable);
         return new ResponseData(ExceptionMsg.SUCCESS,page);
@@ -52,7 +52,7 @@ public class GoodsController {
     public ResponseData listitem_c(@RequestParam(value = "start",defaultValue = "0")Integer start,
                                    @RequestParam(value = "num",defaultValue = "10")Integer num){
         start = start<0?0:start;
-        Sort sort = Sort.by(Sort.Direction.DESC, "gid");
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(start, num, sort);
         Page<Goods> page = goodsService.listall(pageable);
         return new ResponseData(ExceptionMsg.SUCCESS,page);

@@ -9,6 +9,9 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author xiaogu
  * @date 2021/3/31 17:36
@@ -40,9 +43,11 @@ public class SkuController {
     }
     @GetMapping("/stock/test")
     @ApiOperation("调用测试")
-    public int skutest(@RequestParam Integer sid){
+    public Map skutest(@RequestParam("sid") Integer sid){
+        Map map = new HashMap();
+        map.put("key","测试成功");
         //逻辑
-        return sid;
+        return map;
     }
     @GetMapping("/skucut")
     @ApiOperation("SKU库存锁定")

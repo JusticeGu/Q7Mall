@@ -24,7 +24,19 @@ public class CategoriesServiceimpl implements CategoriesService {
     UserFeign userFeign;
     @Override
     public List<Categories> list() {
-        return categoriesDAO.findAll();
+        List<Categories> categories = categoriesDAO.findAll();
+        handleCategories(categories);
+        return categories;
+    }
+    public List<Categories> getAllByParentId(int parentId) {
+        return categoriesDAO.findAllByPid(parentId);
+    }
+    public void handleCategories(List<Categories> categories){
+        categories.forEach(m -> {
+            List<Categories> children = getAllByParentId(m.getCid());
+            m.setChildren(children);
+        });
+        categories.removeIf(m -> m.getPid() != 0);
     }
 
     @Override

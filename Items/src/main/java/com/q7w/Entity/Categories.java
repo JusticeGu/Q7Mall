@@ -38,6 +38,11 @@ public class Categories extends BaseEntity implements Serializable {
     private String description;//描述
     private String icon;//图标
     private boolean show_status;//是否显示
+    /**
+     * Transient property for storing children menus.
+     */
+    @Transient
+    private List<Categories> children;
     @JsonIgnore
     @OneToMany(mappedBy = "cateid",cascade=CascadeType.ALL,fetch=FetchType.LAZY)
     //级联保存、更新、删除、刷新;延迟加载。当删除用户，会级联删除该用户的所有文章
