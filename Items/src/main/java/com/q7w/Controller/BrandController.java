@@ -23,6 +23,7 @@ import java.util.HashMap;
 @RestController
 @Api(tags = "品牌服务接口")
 @RequestMapping("/api/brand")
+@CrossOrigin
 public class BrandController {
     @Autowired
     BrandService brandService;
@@ -58,6 +59,7 @@ public class BrandController {
     }
     @PostMapping("brandop")
     @ApiOperation("品牌添加")
+    @CrossOrigin
     public ResponseData itemadd(@RequestBody Brand brand){
         byte status = brandService.addbrand(brand);
         switch (status) {
@@ -70,6 +72,7 @@ public class BrandController {
     }
     @DeleteMapping("branddel")
     @ApiOperation("品牌删除")
+    @CrossOrigin
     public ResponseData itemdel(@RequestParam int bid){
         byte status = brandService.delbrand(bid);
         switch (status) {
@@ -82,6 +85,7 @@ public class BrandController {
     }
     @PutMapping("brandop")
     @ApiOperation("品牌修改")
+    @CrossOrigin
     public ResponseData itemmodify(@RequestBody Brand brand){
         brandService.modefybrand(brand);
         return new ResponseData(ExceptionMsg.SUCCESS,"修改成功");

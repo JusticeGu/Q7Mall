@@ -2,6 +2,8 @@ package com.q7w.Service;
 
 import com.q7w.DTO.Product;
 import com.q7w.Entity.Goods;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
@@ -12,7 +14,8 @@ import java.util.List;
 public interface GoodsService {
     public Goods findbyidorname(int gid);
     public Goods findbyidorname(String name);
-    public List<Goods> list();
+    public Page<Goods> list(Pageable pageable);
+    public Page<Goods> listall(Pageable pageable);
     public Product iteminfo(int gid);
     public byte addGoods(Goods goods);
     public byte delgoods(int gid);

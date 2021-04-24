@@ -7,6 +7,9 @@ import com.q7w.Service.GoodsService;
 import com.q7w.Service.SkuService;
 import com.q7w.common.exception.GlobalException;
 import com.q7w.common.service.RedisService;
+import com.q7w.rabbit.SKUReceiver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +28,7 @@ public class SkuServiceimpl implements SkuService {
     GoodsService goodsService;
     @Autowired
     RedisService redisService;
-
+    private static Logger LOGGER = LoggerFactory.getLogger(SkuServiceimpl.class);
     @Override
     public Goods_sku findbyidorname(int sid) {
         Goods_sku sku = skudao.findById(sid);
@@ -123,12 +126,13 @@ public class SkuServiceimpl implements SkuService {
             Goods_sku goods_sku = findbyidorname(sid);
             goods_sku.setStock(goods_sku.getStock()-num);
             skudao.save(goods_sku);
+            LOGGER.info("核减库存sid{},{}个单位",sid,num);
             return 1;
         }
         else if(op ==2){
-            Goods_sku goods_sku = findbyidorname(sid);
-            goods_sku.setStock(goods_sku.getStock()+num);
-            skudao.save(goods_sku);
+            int stock = queryskustock(sid);
+            redisService.set("goods:sku:"+sid,(Integer)stock+num);
+            LOGGER.info("释放库存{},{}个单位",sid,num);
             return 1;
         }
         return 0;

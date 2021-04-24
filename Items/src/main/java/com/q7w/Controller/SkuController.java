@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Api(tags = "商品(SKU)服务接口")
 @RequestMapping("/api/sku")
+@CrossOrigin
 public class SkuController {
     @Autowired
     SkuService skuService;

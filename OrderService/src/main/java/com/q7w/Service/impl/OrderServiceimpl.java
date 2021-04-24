@@ -12,6 +12,7 @@ import com.q7w.Service.OrderService;
 import com.q7w.Service.UserFeign;
 import com.q7w.common.exception.GlobalException;
 import com.q7w.mq.CancelOrderSender;
+import com.q7w.mq.SKUSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,8 @@ public class OrderServiceimpl implements OrderService {
     private static Logger LOGGER = LoggerFactory.getLogger(OrderServiceimpl.class);
     @Autowired
     private CancelOrderSender cancelOrderSender;
-
+    @Autowired
+    SKUSender skuSender;
     @Override
     public Order querybuid(Long oid) {
         Order order = orderDao.findByOid(oid);
@@ -95,8 +97,8 @@ public class OrderServiceimpl implements OrderService {
     @Override
     public int cancelorder(Long oid) {
         //todo 执行一系类取消订单操作，具体参考mall项目
-        LOGGER.info("订单逾期已被取消：orderId:{}",oid);
-        updateorder(oid,0L,"逾期未支付",-3);
+        LOGGER.info("订单已被取消：orderId:{}",oid);
+        updateorder(oid,0L,"订单已取消",-3);
         return 1;
     }
 
@@ -158,6 +160,26 @@ public class OrderServiceimpl implements OrderService {
         order.setLastmodifiedBy(userFeign.getusername());
         order.setUpdateTime(time);
         orderDao.save(order);
+        if(status==1){skuSender.sendmsg(order.getSkuid(),1,1);}
+        else if(status == -3){skuSender.sendmsg(order.getSkuid(),2,1); }
+        return 1;
+    }
+
+    @Override
+    public int paidorder(Long orderid, Long payid, String content) {
+        Order order = querybuid(orderid);
+        if (order.getStatus()!=0){return -1;}
+        order.setStatus(1);
+        order.setPayid(payid);
+        order.setContent(content);
+        Date now= new Date();
+        Long time = now.getTime();
+        order.setCreateBy(userFeign.getusername());
+        order.setCreateTime(time);
+        order.setLastmodifiedBy(userFeign.getusername());
+        order.setUpdateTime(time);
+        orderDao.save(order);
+        skuSender.sendmsg(order.getSkuid(),1,1);
         return 1;
     }
 

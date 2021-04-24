@@ -9,10 +9,12 @@ public interface UserCacheService {
     /**
      * 设置验证码
      */
-    void setAuthCode(String telephone, String authCode);
+    void setAuthCode(String email, String authCode);
 
     /**
      * 获取验证码
      */
-    String getAuthCode(String telephone);
+    String getAuthCode(String email);
+
+    void delAuthCode(String email);
 }

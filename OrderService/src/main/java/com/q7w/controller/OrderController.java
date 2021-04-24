@@ -4,6 +4,7 @@ import com.q7w.Entity.Order;
 import com.q7w.Service.OrderService;
 import com.q7w.common.result.ExceptionMsg;
 import com.q7w.common.result.ResponseData;
+import com.q7w.mq.SKUSender;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,6 +50,12 @@ public class OrderController {
     @GetMapping("/paidorder")
     @ApiOperation("订单支付确认")
     public ResponseData paidorder(Long oid){
-        return new ResponseData(ExceptionMsg.SUCCESS,orderService.updateorder(oid,123L,"支付测试",1));
+        int status = orderService.paidorder(oid,123L,"支付测试");
+        if (status == 1){
+            return new ResponseData(ExceptionMsg.SUCCESS,"支付成功");}
+        else {
+            return new ResponseData(ExceptionMsg.FAILED,"支付失败,订单已被支付");
+        }
+
     }
 }

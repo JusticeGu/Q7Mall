@@ -4,11 +4,13 @@ import com.q7w.Service.UserCacheService;
 import com.q7w.common.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
 /**
  * @author xiaogu
  * @date 2021/4/8 20:13
  **/
+@Service
 public class UserCacheServiceimpl implements UserCacheService {
     @Autowired
     private RedisService redisService;
@@ -34,4 +36,8 @@ public class UserCacheServiceimpl implements UserCacheService {
         return (String) redisService.get(key);
     }
 
+    @Override
+    public void delAuthCode(String email) {
+        redisService.del(REDIS_DATABASE + ":" + REDIS_KEY_AUTH_CODE + ":" + email);
+    }
 }

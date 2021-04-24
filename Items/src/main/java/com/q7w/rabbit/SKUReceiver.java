@@ -2,6 +2,8 @@
 package com.q7w.rabbit;
 
 import com.q7w.Service.SkuService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,11 +22,12 @@ import java.util.Map;
 public class SKUReceiver {
     @Autowired
     SkuService skuService;
+    private static Logger LOGGER = LoggerFactory.getLogger(SKUReceiver.class);
     @RabbitHandler//@RabbitHandler来实现具体消费
     public void QueueReceiver(Map res) {
         try {
-            System.out.println("正在处理SKU库存"+ (Integer)res.get("skuid")+":"+(Integer)res.get("op"));
-           // skuService.opsql( (Integer)res.get("skuid"), (Integer)res.get("op"), (Integer)res.get("num"))
+            LOGGER.info("正在处理SKU库存"+ (Integer)res.get("skuid")+":"+(Integer)res.get("op"));
+            skuService.opsql( (Integer)res.get("skuid"), (Integer)res.get("op"), (Integer)res.get("num"));
         }catch (Exception e){
             System.out.println("接收异常："+e);
         }

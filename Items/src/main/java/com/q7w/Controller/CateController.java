@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Api(tags = "商品分类接口")
 @RequestMapping("/api/categories")
+@CrossOrigin
 public class CateController {
     @Autowired
     CategoriesService categoriesService;

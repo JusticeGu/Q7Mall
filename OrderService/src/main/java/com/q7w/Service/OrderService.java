@@ -22,6 +22,7 @@ public interface OrderService {
     public List<Order> querybyid(Long oid);
     public List<Order> querybyuser(Integer uid);
     public int updateorder(Long orderid,Long payid,String content,int status);
+    public int paidorder(Long orderid,Long payid,String content);
     public int getorderstatus(Long orderid);
     public boolean message(Long oid);
 }

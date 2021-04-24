@@ -15,6 +15,6 @@ public interface UserService {
     public boolean checkcode(String mail,String code);
     public int updatepassword(String email,String password,String authcode);
     public User getCurrentUser();
-    public int login(String Usrname,String passwrd);
+    public ResponseData login (String Username,String password);
 
 }

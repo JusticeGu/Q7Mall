@@ -1,6 +1,7 @@
 package com.q7w.Controller;
 
 import com.q7w.DTO.Product;
+import com.q7w.Entity.Brand;
 import com.q7w.Entity.Goods;
 import com.q7w.Service.GoodsService;
 import com.q7w.common.result.ExceptionMsg;
@@ -8,6 +9,10 @@ import com.q7w.common.result.ResponseData;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -17,19 +22,40 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @Api(tags = "商品(SPU)服务接口")
 @RequestMapping("/api/item")
+@CrossOrigin
 public class GoodsController {
     @Autowired
     GoodsService goodsService;
     @GetMapping("/itemsinfo")
-    @ApiOperation("商品信息")
+    @ApiOperation("商品信息B端")
     public ResponseData itemsinfo(int gid){
-        return new ResponseData(ExceptionMsg.SUCCESS,goodsService.iteminfo(gid));
+        Product product = goodsService.iteminfo(gid);
+        if (product.getGoodsinfo().getStatus()==1){
+            return new ResponseData(ExceptionMsg.SUCCESS,product);
+        }else {
+            return new ResponseData(ExceptionMsg.ContextError,"商品正在被审核或已被下架！");
+        }
+
     }
     @GetMapping("/list")
-    @ApiOperation("商品列表")
-    public ResponseData listitem(){
-        //逻辑
-        return new ResponseData(ExceptionMsg.SUCCESS,goodsService.list());
+    @ApiOperation("商品列表B端")
+    public ResponseData listitem_b(@RequestParam(value = "start",defaultValue = "0")Integer start,
+                                   @RequestParam(value = "num",defaultValue = "10")Integer num){
+        start = start<0?0:start;
+        Sort sort = Sort.by(Sort.Direction.DESC, "gid");
+        Pageable pageable = PageRequest.of(start, num, sort);
+        Page<Goods> page = goodsService.list(pageable);
+        return new ResponseData(ExceptionMsg.SUCCESS,page);
+    }
+    @GetMapping("/admin/list")
+    @ApiOperation("商品列表C端")
+    public ResponseData listitem_c(@RequestParam(value = "start",defaultValue = "0")Integer start,
+                                   @RequestParam(value = "num",defaultValue = "10")Integer num){
+        start = start<0?0:start;
+        Sort sort = Sort.by(Sort.Direction.DESC, "gid");
+        Pageable pageable = PageRequest.of(start, num, sort);
+        Page<Goods> page = goodsService.listall(pageable);
+        return new ResponseData(ExceptionMsg.SUCCESS,page);
     }
     @PostMapping("itemsadd")
     @ApiOperation("商品添加")

@@ -8,6 +8,8 @@ import com.q7w.Entity.Product_Contents;
 import com.q7w.Service.*;
 import com.q7w.common.exception.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -53,8 +55,13 @@ public class GoodsServiceimpl implements GoodsService {
         return goods;
     }
     @Override
-    public List<Goods> list() {
-        return goodsDAO.findAll();
+    public Page<Goods> list(Pageable pageable) {
+        return goodsDAO.findAllByStatus(1,pageable);
+    }
+
+    @Override
+    public Page<Goods> listall(Pageable pageable) {
+        return goodsDAO.findAll(pageable);
     }
 
     @Override
