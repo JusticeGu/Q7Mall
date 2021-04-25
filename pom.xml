@@ -9,14 +9,13 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>ItemService</module>
         <module>UserService</module>
         <module>OrderService</module>
         <module>AuthService</module>
         <module>CommonModel</module>
         <module>Items</module>
-        <module>UserCoreService</module>
-        <module>Gateway</module>
+        <module>mall-gateway</module>
+        <module>CommonExtend</module>
 
     </modules>
 

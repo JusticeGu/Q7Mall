@@ -1,0 +1,83 @@
+server:
+  port: 8021
+spring:
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true
+          lower-case-service-id: true #使用小写service-id
+      routes: #配置路由路径
+        - id: UserCoreService
+          uri: lb://UserCoreService
+          predicates:
+            - Path=/api/user/**
+          filters:
+            - StripPrefix=1
+        - id: BrandService
+          uri: lb://ItemsCoreService/brand
+          predicates:
+            - Path=/api/brand/**
+          filters:
+            - StripPrefix=1
+        - id: ItemsCoreService2
+          uri: lb://ItemsCoreService
+          predicates:
+            - Path=/item/**
+          filters:
+            - StripPrefix=1
+        - id: mall-search
+          uri: lb://mall-search
+          predicates:
+            - Path=/mall-search/**
+          filters:
+            - StripPrefix=1
+        - id: mall-demo
+          uri: lb://mall-demo
+          predicates:
+            - Path=/mall-demo/**
+          filters:
+            - StripPrefix=1
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:8021/UserCoreService/rsa/publicKey' #配置RSA的公钥访问地址
+  redis:
+    database: 0
+    port: 6379
+    host: localhost
+    password:
+secure:
+  ignore:
+    urls: #配置白名单路径
+      - "/doc.html"
+      - "/swagger-resources/**"
+      - "/swagger/**"
+      - "/**/v2/api-docs"
+      - "/**/*.js"
+      - "/**/*.css"
+      - "/**/*.png"
+      - "/**/*.ico"
+      - "/webjars/springfox-swagger-ui/**"
+      - "/actuator/**"
+      - "/UserCoreService/oauth/token"
+      - "/UserCoreService/rsa/publicKey"
+      - "/mall-search/**"
+      - "/mall-portal/sso/login"
+      - "/mall-portal/sso/register"
+      - "/mall-portal/sso/getAuthCode"
+      - "/ItemsCoreService/api/brand/**"
+      - "/mall-portal/product/**"
+      - "/mall-portal/brand/**"
+      - "/mall-admin/admin/login"
+      - "/mall-admin/admin/register"
+      - "/mall-admin/minio/upload"
+management: #开启SpringBoot Admin的监控
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  endpoint:
+    health:
+      show-details: always
