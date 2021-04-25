@@ -19,10 +19,10 @@ public class RoleResource extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
-    private Integer id;
+    private Long id;
 
-    private Integer rid;
+    private Long rid;
 
-    private Integer pid;
+    private Long pid;
 }
 

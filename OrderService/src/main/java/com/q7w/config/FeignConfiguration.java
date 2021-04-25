@@ -29,10 +29,8 @@ public class FeignConfiguration implements RequestInterceptor {
     }
     @Override
     public void apply(RequestTemplate template) {
-        Object att = RequestContextHolder.getRequestAttributes();
-       // ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if(!att.equals(null)){
-            ServletRequestAttributes attributes = (ServletRequestAttributes)att;
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder
+                .getRequestAttributes();
         HttpServletRequest request = attributes.getRequest();
         Enumeration<String> headerNames = request.getHeaderNames();
         if (headerNames != null) {
@@ -55,5 +53,5 @@ public class FeignConfiguration implements RequestInterceptor {
             body.deleteCharAt(body.length()-1);
             template.body(body.toString());
         }
-    }}
+    }
 }

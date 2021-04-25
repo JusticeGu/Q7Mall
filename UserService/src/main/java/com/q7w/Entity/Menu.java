@@ -46,7 +46,7 @@ public class Menu extends BaseEntity{
     /**
      * Parent menu.
      */
-    private int parentId;
+    private Long parentId;
     /**
      * Transient property for storing children menus.
      */

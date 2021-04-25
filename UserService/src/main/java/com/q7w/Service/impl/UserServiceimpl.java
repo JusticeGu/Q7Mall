@@ -3,14 +3,20 @@ package com.q7w.Service.impl;
 import cn.hutool.core.util.StrUtil;
 import com.q7w.DAO.UserDao;
 import com.q7w.Entity.User;
+import com.q7w.Entity.Userpro;
 import com.q7w.Service.AuthService;
 import com.q7w.Service.UserCacheService;
 import com.q7w.Service.UserService;
 import com.q7w.common.constant.AuthConstant;
+import com.q7w.common.domain.UserDto;
 import com.q7w.common.exception.GlobalException;
 import com.q7w.common.result.ResponseData;
+import com.q7w.common.util.Pbkdf2Sha256;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import cn.hutool.core.util.RandomUtil;
 
@@ -33,10 +39,27 @@ public class UserServiceimpl implements UserService {
     UserCacheService userCacheService;
     @Autowired
     AuthService authService;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Override
     public User getUserByUsername(String username) {
         User user = userDao.findUserByUsername(username);
         return user;
+    }
+
+    @Override
+    public UserDto loadUserByUsername(String username) {
+        User user = getUserByUsername(username);
+        UserDto userDto = new UserDto();
+        userDto.setUsername(user.getUsername());
+        userDto.setPassword(user.getPassword());
+        userDto.setStatus(1);
+        return userDto;
+    }
+
+    @Override
+    public Page<User> listall(Pageable pageable) {
+        return userDao.findAll(pageable);
     }
 
     @Override
@@ -50,16 +73,26 @@ public class UserServiceimpl implements UserService {
 
     @Override
     public int register(String username, String password, String email, String authcode) {
-        if (getUserByUsername(username)!=null){return 2;}
         if (!checkcode(email, authcode)){return 3;}
+        if (getUserByUsername(username)!=null){return 2;}
         User user = new User();
         user.setUsername(username);
-        user.setPassword(password);
+        String salt = RandomUtil.randomString(16);
+        //String pwd = Pbkdf2Sha256.encode(password,salt);
+        String pwd = passwordEncoder.encode(password);
+        user.setPassword(pwd);
         user.setEmail(email);
         user.setEnabled(true);
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
+        userDao.save(user);
+        return 1;
+    }
+
+    @Override
+    public int extendUserinfo(Userpro userpro) {
+        userpro.setUid(getUserByuid(userpro.getUid()).getId());
         return 1;
     }
 
@@ -71,11 +104,14 @@ public class UserServiceimpl implements UserService {
 
     @Override
     public boolean checkcode(String mail, String code) {
+        try{
         String dbcode = userCacheService.getAuthCode(mail);
         if (dbcode.equals(code)){
             userCacheService.delAuthCode(mail);
             return true;}
-        return false;
+        return false;}catch (Exception e){
+            return  false;
+        }
     }
 
     @Override
@@ -100,5 +136,10 @@ public class UserServiceimpl implements UserService {
         params.put("username",Username);
         params.put("password",password);
         return authService.getAccessToken(params);
+    }
+
+    @Override
+    public String getcurrertusername() {
+        return "test-sys";
     }
 }

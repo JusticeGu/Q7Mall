@@ -28,7 +28,8 @@ public interface RoleService {
      * 获取所有角色列表
      */
     List<Role> list();
-
+    Role findById(Long id);
+    List<Role> listRolesByUser(String username);
     /**
      * 分页获取角色列表
      */

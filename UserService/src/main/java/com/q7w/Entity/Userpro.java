@@ -2,21 +2,21 @@ package com.q7w.Entity;
 
 import lombok.Data;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * @author xiaogu
  * @date 2021/3/30 19:49
  **/
+
 @Data
+@Entity
+@Table(name = "auth_user_profile")
 public class Userpro extends BaseEntity implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private Long uid;
     private String realname;
     private String phone;

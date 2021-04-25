@@ -5,6 +5,7 @@ public enum ExceptionMsg {
     SUCCESS_GET("200", "数据获取成功DB"),
     SUCCESS_LOGIN("200", "登录成功"),
     FAILED_403("403","权限禁止访问"),
+    Unauthorized("401","未登录，请登录后再试"),
     FAILED("801","操作失败"),
     ParamError("802", "参数错误！"),
     BADERROR("803", "请求异常！"),

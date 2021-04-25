@@ -60,7 +60,13 @@ public class CateController {
     @PutMapping("brandop")
     @ApiOperation("分类修改")
     public ResponseData catemodify(@RequestBody Categories categories){
-        //逻辑
-        return new ResponseData(ExceptionMsg.SUCCESS,"修改成功");
+        byte status = categoriesService.modify(categories);
+        switch (status) {
+            case 1:
+                return new ResponseData(ExceptionMsg.SUCCESS,"修改成功");
+            case 2:
+                return new ResponseData(ExceptionMsg.FAILED,"分类不存在/重复提交请确认后再试！");
+        }
+        return new ResponseData(ExceptionMsg.ERROR,"sorry");
     }
 }

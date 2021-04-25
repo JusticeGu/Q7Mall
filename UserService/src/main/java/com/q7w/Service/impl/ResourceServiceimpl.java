@@ -1,6 +1,8 @@
 package com.q7w.Service.impl;
 
 import com.q7w.Service.ResourceService;
+import com.q7w.Service.RoleResourceService;
+import com.q7w.Service.RoleService;
 import com.q7w.common.constant.AuthConstant;
 import com.q7w.common.service.RedisService;
 import com.q7w.DAO.ResourceDao;
@@ -29,6 +31,10 @@ public class ResourceServiceimpl implements ResourceService {
     @Autowired
     private RoleResourceDao roleResourceDao;
     @Autowired
+    RoleResourceService roleResourceService;
+    @Autowired
+    RoleService roleService;
+    @Autowired
     private RedisService redisService;
     @Value("${spring.application.name}")
     private String applicationName;
@@ -38,6 +44,18 @@ public class ResourceServiceimpl implements ResourceService {
         resourceDao.save(resource);
         initResourceRolesMap();
         return 1;
+    }
+
+    @Override
+    public boolean needFilter(String requestAPI) {
+        List<Resource> resources = resourceDao.findAll();
+        for (Resource r: resources) {
+            // 这里我们进行前缀匹配，拥有父权限就拥有所有子权限
+            if (requestAPI.startsWith(r.getUrl())) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -89,13 +107,33 @@ public class ResourceServiceimpl implements ResourceService {
         List<Role> roleList = roleDao.findAll();
         List<RoleResource> relationList = roleResourceDao.findAll();
         for (Resource resource : resourceList) {
-            Set<Integer> roleIds = relationList.stream().filter(item -> item.getPid().equals(resource.getId())).map(RoleResource::getRid).collect(Collectors.toSet());
+            Set<Long> roleIds = relationList.stream().filter(item -> item.getPid().equals(resource.getId())).map(RoleResource::getRid).collect(Collectors.toSet());
             List<String> roleNames = roleList.stream().filter(item -> roleIds.contains(item.getId())).map(item -> item.getId() + "_" + item.getName()).collect(Collectors.toList());
             resourceRoleMap.put("/"+applicationName+resource.getUrl(),roleNames);
         }
         redisService.del(AuthConstant.RESOURCE_ROLES_MAP_KEY);
         redisService.hSetAll(AuthConstant.RESOURCE_ROLES_MAP_KEY, resourceRoleMap);
         return resourceRoleMap;
+    }
 
+    @Override
+    public List<Resource> listPermsByRoleId(Long rid) {
+        List<RoleResource> rps = roleResourceService.findAllByRid(rid);
+        List<Resource> resources = new ArrayList<>();
+        rps.forEach(rp -> resources.add(resourceDao.findById(rp.getPid()).get()));
+        return resources;
+    }
+
+    @Override
+    public Set<String> listPermissionURLsByUser(String username) {
+        List<Role> roles = roleService.listRolesByUser(username);
+        Set<String> URLs = new HashSet<>();
+
+        roles.forEach(r -> {
+            List<RoleResource> rps = roleResourceService.findAllByRid(r.getId());
+            rps.forEach(rp -> URLs.add(resourceDao.findById(rp.getPid()).get().getUrl()));
+        });
+
+        return URLs;
     }
 }

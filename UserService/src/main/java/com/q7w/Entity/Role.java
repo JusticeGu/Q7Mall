@@ -5,6 +5,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author xiaogu
@@ -20,5 +21,11 @@ public class Role extends BaseEntity implements Serializable {
     private String description;
     private Integer adminCount;
     private Integer status;
-
+    @Transient
+    private List<Resource> resources;
+    /**
+     * Transient property for storing menus owned by current role.
+     */
+    @Transient
+    private List<Menu> menus;
 }

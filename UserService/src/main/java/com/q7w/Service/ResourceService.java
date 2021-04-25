@@ -4,6 +4,7 @@ import com.q7w.Entity.Resource;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author xiaogu
@@ -14,7 +15,12 @@ public interface ResourceService {
      * 添加资源
      */
     int create(Resource resource);
-
+    /**
+     * 比较权限
+     */
+    boolean needFilter(String requestAPI);
+    List<Resource> listPermsByRoleId(Long rid);
+    Set<String> listPermissionURLsByUser(String username);
     /**
      * 修改资源
      */

@@ -15,6 +15,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 public class Q7mallAuthServiceApplication {
     public static void main(String[] args) {
         SpringApplication.run( Q7mallAuthServiceApplication.class, args);
-        System.out.println("用户核心服务已启动...");
+        System.out.println("认证核心服务已启动...");
     }
 }

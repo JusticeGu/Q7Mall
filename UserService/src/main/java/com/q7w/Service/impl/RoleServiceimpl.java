@@ -1,12 +1,15 @@
 package com.q7w.Service.impl;
 
 import com.q7w.DAO.RoleDao;
+import com.q7w.Entity.Menu;
+import com.q7w.Entity.Resource;
 import com.q7w.Entity.Role;
-import com.q7w.Service.ResourceService;
-import com.q7w.Service.RoleService;
+import com.q7w.Entity.UserRole;
+import com.q7w.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,11 +19,16 @@ import java.util.List;
  **/
 @Service
 public class RoleServiceimpl implements RoleService {
-
     @Autowired
     private RoleDao roleDao;
     @Autowired
     private ResourceService resourceService;
+    @Autowired
+    MenuService menuService;
+    @Autowired
+    UserService userService;
+    @Autowired
+    UserRoleService userRoleService;
     @Override
     public int create(Role role) {
         role.setCreateTime(new Date().getTime());
@@ -47,15 +55,35 @@ public class RoleServiceimpl implements RoleService {
 
     @Override
     public List<Role> list() {
-        return roleDao.findAll();
+        List<Role> roles = roleDao.findAll();
+        List<Resource> resources;
+        List<Menu> menus;
+        for (Role role : roles) {
+            resources = resourceService.listPermsByRoleId(role.getId());
+            menus = menuService.getMenusByRoleId(role.getId());
+            role.setResources(resources);
+            role.setMenus(menus);
+        }
+        return roles;
     }
-
+    @Override
+    public Role findById(Long id) {
+        return roleDao.findById(id).get();
+    }
     @Override
     public List<Role> list(String keyword, Integer pageSize, Integer pageNum) {
 
         return roleDao.findAll();
     }
 
+    @Override
+    public List<Role> listRolesByUser(String username) {
+        Long uid =  userService.getUserByUsername(username).getId();
+        List<Role> roles = new ArrayList<>();
+        List<UserRole> urs = userRoleService.listAllByUid(uid);
+        urs.forEach(ur -> roles.add(roleDao.findById(ur.getRid()).get()));
+        return roles;
+    }
 //    @Override
 //    public List<Menu> getMenuList(Long adminId) {
 //        return roleDao.getMenuList(adminId);

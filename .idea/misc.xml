@@ -12,6 +12,7 @@
         <option value="$PROJECT_DIR$/CommonTool/pom.xml" />
         <option value="$PROJECT_DIR$/ItemService/pom.xml" />
         <option value="$PROJECT_DIR$/Q7Common/pom.xml" />
+        <option value="$PROJECT_DIR$/UserCoreService/pom.xml" />
       </set>
     </option>
   </component>
