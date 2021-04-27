@@ -46,18 +46,20 @@ public class SkuServiceimpl implements SkuService {
         }
         return sku;
     }
-
+    public List<Goods_sku> findbyspuif(Integer gid) {
+        List<Goods_sku> skuList = skudao.findAllByGoodsid(gid);
+        if (skuList==null){
+            throw new GlobalException("805X05-1","该商品暂无SKU库存");
+        }
+        return skuList;
+    }
     @Override
     public List<Goods_sku> listall() {
         return skudao.findAll();
     }
     @Override
     public List<Goods_sku> skuquery(Integer gid) {
-        try {
-            return skudao.findAllByGoodsid(gid);
-        }catch (Exception e){
-            throw e;
-        }
+      return findbyspuif(gid);
 
     }
     @Override

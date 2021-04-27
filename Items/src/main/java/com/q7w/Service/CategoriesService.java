@@ -17,5 +17,7 @@ public interface CategoriesService {
     public byte del(int id);
     public byte modify(Categories categories);
     public Categories querybyname(String name);
+    public List<Categories> getAllByParentId(int parentId);
+  //  List<Categories> getchildcate(int cid);
 
 }

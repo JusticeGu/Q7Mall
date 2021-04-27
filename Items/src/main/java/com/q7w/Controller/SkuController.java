@@ -75,4 +75,10 @@ public class SkuController {
         //逻辑
         return new ResponseData(ExceptionMsg.SUCCESS,"库存更新成功");
     }
+    @GetMapping("/getskubuyspu")
+    @ApiOperation("获取SPU下所有SKU")
+    public ResponseData getspuallsku(@RequestParam int gid){
+        //逻辑
+        return new ResponseData(ExceptionMsg.SUCCESS,skuService.skuquery(gid));
+    }
 }

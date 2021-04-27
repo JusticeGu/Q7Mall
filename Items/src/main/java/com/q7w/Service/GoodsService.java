@@ -1,6 +1,7 @@
 package com.q7w.Service;
 
 import com.q7w.DTO.Product;
+import com.q7w.DTO.Spu;
 import com.q7w.Entity.Goods;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -22,4 +23,6 @@ public interface GoodsService {
     public byte modifygoods(int gid);
     public List<Goods> listbyname(String name);
     public List<Goods> listbyid(int id);
+    public List<Goods> listbycate(int cid);
+    public List<Spu> listall_b();
 }

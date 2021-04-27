@@ -47,6 +47,16 @@ public class GoodsController {
         Page<Goods> page = goodsService.list(pageable);
         return new ResponseData(ExceptionMsg.SUCCESS,page);
     }
+    @GetMapping("/listbycate")
+    @ApiOperation("分类商品列表")
+    public ResponseData listbycate(@RequestParam(value = "start",defaultValue = "0")Integer start,
+                                   @RequestParam(value = "num",defaultValue = "10")Integer num){
+        start = start<0?0:start;
+        Sort sort = Sort.by(Sort.Direction.DESC, "id");
+        Pageable pageable = PageRequest.of(start, num, sort);
+        Page<Goods> page = goodsService.list(pageable);
+        return new ResponseData(ExceptionMsg.SUCCESS,page);
+    }
     @GetMapping("/admin/list")
     @ApiOperation("商品列表C端")
     public ResponseData listitem_c(@RequestParam(value = "start",defaultValue = "0")Integer start,
@@ -71,6 +81,11 @@ public class GoodsController {
                 }
                 return new ResponseData(ExceptionMsg.SUCCESS,"添加成功");
 
+    }
+    @GetMapping("/getlist")
+    @ApiOperation("B端商品列表")
+    public ResponseData listb(){
+        return new ResponseData(ExceptionMsg.SUCCESS,goodsService.listall_b());
     }
 
 

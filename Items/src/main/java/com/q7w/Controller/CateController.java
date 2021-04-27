@@ -33,6 +33,7 @@ public class CateController {
         //逻辑
         return new ResponseData(ExceptionMsg.SUCCESS,categoriesService.querybyname(brandname));
     }
+
     @PostMapping("cateop")
     @ApiOperation("分类添加")
     public ResponseData cateadd(@RequestBody Categories categories){

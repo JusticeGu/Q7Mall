@@ -63,6 +63,9 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
             if(StrUtil.isEmpty(token)){
                 return Mono.just(new AuthorizationDecision(false));
             }
+            if(!StrUtil.contains(token,AuthConstant.JWT_TOKEN_PREFIX)){
+                return Mono.just(new AuthorizationDecision(false));
+            }
             String realToken = token.replace(AuthConstant.JWT_TOKEN_PREFIX, "");
             JWSObject jwsObject = JWSObject.parse(realToken);
             String userStr = jwsObject.getPayload().toString();

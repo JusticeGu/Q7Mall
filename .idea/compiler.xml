@@ -8,7 +8,6 @@
         <outputRelativeToContentRoot value="true" />
         <module name="UserCoreService" />
         <module name="UserService" />
-        <module name="AuthService" />
         <module name="Items" />
         <module name="CommonExtend" />
         <module name="OrderService" />
@@ -17,6 +16,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
+      <module name="AuthService" target="8" />
       <module name="CommonTool" target="8" />
       <module name="Gateway" target="8" />
       <module name="ItemService" target="8" />

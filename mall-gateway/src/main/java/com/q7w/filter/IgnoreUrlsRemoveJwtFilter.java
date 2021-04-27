@@ -3,7 +3,9 @@ package com.q7w.filter;
 
 import com.q7w.common.constant.AuthConstant;
 import com.q7w.config.IgnoreUrlsConfig;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.web.server.authentication.AuthenticationWebFilter;
 import org.springframework.stereotype.Component;
@@ -22,7 +24,11 @@ import java.util.List;
  * Created by macro on 2020/7/24.
  */
 @Component
+@Data
+@ConfigurationProperties("secure.ignore")
 public class IgnoreUrlsRemoveJwtFilter implements WebFilter {
+    private List<String> urls;
+    private String[] skipAuthUrls;
     @Autowired
     private IgnoreUrlsConfig ignoreUrlsConfig;
     @Override
@@ -31,7 +37,8 @@ public class IgnoreUrlsRemoveJwtFilter implements WebFilter {
         URI uri = request.getURI();
         PathMatcher pathMatcher = new AntPathMatcher();
         //白名单路径移除JWT请求头
-        List<String> ignoreUrls = ignoreUrlsConfig.getUrls();
+        //List<String> ignoreUrls = ignoreUrlsConfig.getUrls();
+        List<String> ignoreUrls = urls;
         for (String ignoreUrl : ignoreUrls) {
             if (pathMatcher.match(ignoreUrl, uri.getPath())) {
                 request = exchange.getRequest().mutate().header(AuthConstant.JWT_TOKEN_HEADER, "").build();

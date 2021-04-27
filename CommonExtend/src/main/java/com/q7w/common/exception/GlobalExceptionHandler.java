@@ -69,7 +69,17 @@ public class GlobalExceptionHandler {
         ex.printStackTrace();
         return new ResponseData(ExceptionMsg.EXCEPT,ex.getResultCode()+":"+ex.getErrorMsg());
     }
-
+    /**
+     * 处理自定义异常
+     * @param ex
+     * @return
+     */
+    @ExceptionHandler(BusinessException.class)
+    public ResponseData bizException_1(GlobalException ex) {
+        Logger.error("### 业务异常: {}", ex.getErrorMsg()+":"+ex.getMessage());
+        ex.printStackTrace();
+        return new ResponseData(ExceptionMsg.ContextError,ex.getResultCode()+":"+ex.getErrorMsg());
+    }
     /**
      * 处理Exception
      * @param ex

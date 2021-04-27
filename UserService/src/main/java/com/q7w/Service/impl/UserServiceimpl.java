@@ -52,6 +52,7 @@ public class UserServiceimpl implements UserService {
     public UserDto loadUserByUsername(String username) {
         User user = getUserByUsername(username);
         UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
         userDto.setUsername(user.getUsername());
         userDto.setPassword(user.getPassword());
         userDto.setStatus(1);
@@ -134,6 +135,7 @@ public class UserServiceimpl implements UserService {
         params.put("client_id", AuthConstant.PORTAL_CLIENT_ID);
         params.put("client_secret","123456");
         params.put("grant_type","password");
+
         params.put("username",Username);
         params.put("password",password);
         return authService.getAccessToken(params);

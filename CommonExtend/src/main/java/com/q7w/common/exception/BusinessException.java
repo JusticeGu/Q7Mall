@@ -1,19 +1,42 @@
 package com.q7w.common.exception;
 
+import com.q7w.common.result.ExceptionMsg;
+
 public class BusinessException extends RuntimeException{
-    //自定义错误码
-    private Integer code;
-    //自定义构造器，必须输入错误码及内容
-    public BusinessException(int code, String msg) {
-        super(msg);
-        this.code = code;
+
+    private static final long serialVersionUID = -6543484989095940852L;
+    private final String errorCode;
+    private final String errorMsg;
+
+    public BusinessException(ExceptionMsg resultCode) {
+        super(resultCode.getMsg());
+        this.errorCode = resultCode.getCode();
+        this.errorMsg = resultCode.getMsg();
     }
 
-    public Integer getCode() {
-        return code;
+    public BusinessException(ExceptionMsg resultCode, Throwable throwable) {
+        super(resultCode.getMsg(), throwable);
+        this.errorCode = resultCode.getCode();
+        this.errorMsg = resultCode.getMsg();
     }
 
-    public void setCode(Integer code) {
-        this.code = code;
+    public BusinessException(String errorCode, String errorMsg) {
+        super(errorMsg);
+        this.errorCode = errorCode;
+        this.errorMsg = errorMsg;
+    }
+
+    public BusinessException(String errorCode, String errorMsg, Throwable throwable) {
+        super(errorMsg, throwable);
+        this.errorCode = errorCode;
+        this.errorMsg = errorMsg;
+    }
+
+    public String getResultCode() {
+        return this.errorCode;
+    }
+
+    public String getErrorMsg() {
+        return this.errorMsg;
     }
 }

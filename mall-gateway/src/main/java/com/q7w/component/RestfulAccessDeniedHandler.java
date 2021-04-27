@@ -31,7 +31,7 @@ public class RestfulAccessDeniedHandler implements ServerAccessDeniedHandler {
         response.getHeaders().set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         response.getHeaders().set("Access-Control-Allow-Origin","*");
         response.getHeaders().set("Cache-Control","no-cache");
-        ResponseData res = new ResponseData(ExceptionMsg.FAILED_403,denied.getMessage());
+        ResponseData res = new ResponseData(ExceptionMsg.FAILED_403,denied.getMessage()+":您暂未被授权访问此资源，请确认您的权限后再试");
        // String body= JSONUtil.toJsonStr(CommonResult.forbidden(denied.getMessage()));
         String body= JSONUtil.toJsonStr(res);
         DataBuffer buffer =  response.bufferFactory().wrap(body.getBytes(Charset.forName("UTF-8")));

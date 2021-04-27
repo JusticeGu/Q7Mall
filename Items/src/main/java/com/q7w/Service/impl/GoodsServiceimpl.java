@@ -1,8 +1,10 @@
 package com.q7w.Service.impl;
 
 import com.q7w.DTO.Product;
+import com.q7w.DTO.Spu;
 import com.q7w.Dao.GoodsDAO;
 import com.q7w.Entity.Brand;
+import com.q7w.Entity.Categories;
 import com.q7w.Entity.Goods;
 import com.q7w.Entity.Product_Contents;
 import com.q7w.Service.*;
@@ -13,6 +15,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -58,6 +61,12 @@ public class GoodsServiceimpl implements GoodsService {
     @Override
     public Page<Goods> list(Pageable pageable) {
         return goodsDAO.findAllByStatus(1,pageable);
+    }
+
+    @Override
+    public List<Spu> listall_b() {
+        List<Spu> spus = goodsDAO.getAllByStatus();
+        return spus;
     }
 
     @Override
@@ -120,5 +129,20 @@ public class GoodsServiceimpl implements GoodsService {
     public List<Goods> listbyid(int id) {
         //TODO
         return null;
+    }
+
+    @Override
+    public List<Goods> listbycate(int cid) {
+        Categories categories=categoriesService.findbyidorname(cid);
+        List<Goods> goods= categories.getGoodsList();
+        List<Categories> cates = categories.getChildren();
+        cates.forEach(m -> {
+            List<Categories> children = categoriesService.getAllByParentId(m.getCid());
+            goods.addAll(m.getGoodsList());
+        });
+        cates.removeIf(m -> m.getPid() != 0);
+
+        return goods;
+
     }
 }

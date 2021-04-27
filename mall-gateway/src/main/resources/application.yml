@@ -11,7 +11,7 @@ spring:
         - id: UserCoreService
           uri: lb://UserCoreService
           predicates:
-            - Path=/api/user/**
+            - Path=/user/**
           filters:
             - StripPrefix=1
         - id: BrandService
@@ -26,6 +26,10 @@ spring:
             - Path=/item/**
           filters:
             - StripPrefix=1
+            - name: Hystrix
+              args:
+                name: HystrixFallbackHandler
+                fallbackUri: forward:/defaultfallback
         - id: mall-search
           uri: lb://mall-search
           predicates:
@@ -42,37 +46,13 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          jwk-set-uri: 'http://localhost:8021/UserCoreService/rsa/publicKey' #配置RSA的公钥访问地址
+          jwk-set-uri: 'http://localhost:8021/user/rsa/publicKey' #配置RSA的公钥访问地址
   redis:
     database: 0
     port: 6379
     host: localhost
     password:
-secure:
-  ignore:
-    urls: #配置白名单路径
-      - "/doc.html"
-      - "/swagger-resources/**"
-      - "/swagger/**"
-      - "/**/v2/api-docs"
-      - "/**/*.js"
-      - "/**/*.css"
-      - "/**/*.png"
-      - "/**/*.ico"
-      - "/webjars/springfox-swagger-ui/**"
-      - "/actuator/**"
-      - "/UserCoreService/oauth/token"
-      - "/UserCoreService/rsa/publicKey"
-      - "/mall-search/**"
-      - "/mall-portal/sso/login"
-      - "/mall-portal/sso/register"
-      - "/mall-portal/sso/getAuthCode"
-      - "/ItemsCoreService/api/brand/**"
-      - "/mall-portal/product/**"
-      - "/mall-portal/brand/**"
-      - "/mall-admin/admin/login"
-      - "/mall-admin/admin/register"
-      - "/mall-admin/minio/upload"
+
 management: #开启SpringBoot Admin的监控
   endpoints:
     web:
@@ -81,3 +61,14 @@ management: #开启SpringBoot Admin的监控
   endpoint:
     health:
       show-details: always
+
+feign:
+  hystrix:
+    enabled: true
+
+org:
+  my:
+    jwt:
+      #跳过认证的路由
+      skip-auth-urls:
+        - /baidu

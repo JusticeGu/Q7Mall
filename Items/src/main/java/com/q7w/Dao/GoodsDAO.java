@@ -1,5 +1,6 @@
 package com.q7w.Dao;
 
+import com.q7w.DTO.Spu;
 import com.q7w.Entity.Brand;
 import com.q7w.Entity.Goods;
 import org.springframework.data.domain.Page;
@@ -23,6 +24,8 @@ public interface GoodsDAO extends JpaRepository<Goods,Integer> {
     List<Goods> findAllBySeccut(boolean seccut);
     List<Goods> findAllByBrand(Brand brand);
     List<Goods> findAllByBrandAndStatus(Brand brand,int status);
+    @Query(nativeQuery =true,value = "select id,name,original from items order by create_time desc")
+    List getAllByStatus();
 
 
 
