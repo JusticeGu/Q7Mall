@@ -45,11 +45,11 @@ public class UserDetilServiceImpl implements UserDetailsService {
         SecurityUser securityUser = new SecurityUser(userDto);
         if (!securityUser.isEnabled()) {
             throw new DisabledException(MessageConstant.ACCOUNT_DISABLED);
-        } else if (!securityUser.isAccountNonLocked()) {
+        } else if (!userDto.isAccountNonLocked()) {
             throw new LockedException(MessageConstant.ACCOUNT_LOCKED);
-        } else if (!securityUser.isAccountNonExpired()) {
+        } else if (!userDto.isAccountNonExpired()) {
             throw new AccountExpiredException(MessageConstant.ACCOUNT_EXPIRED);
-        } else if (!securityUser.isCredentialsNonExpired()) {
+        } else if (!userDto.isCredentialsNonExpired()) {
             throw new CredentialsExpiredException(MessageConstant.CREDENTIALS_EXPIRED);
         }
         return securityUser;

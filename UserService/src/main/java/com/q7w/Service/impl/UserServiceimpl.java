@@ -65,6 +65,11 @@ public class UserServiceimpl implements UserService {
         userDto.setUsername(user.getUsername());
         userDto.setPassword(user.getPassword());
         userDto.setStatus(1);
+        userDto.setAccountNonExpired(user.isAccountNonExpired());
+        userDto.setAccountNonLocked(user.isAccountNonLocked());
+        userDto.setCredentialsNonExpired(user.isCredentialsNonExpired());
+        userDto.setEnabled(user.isEnabled());
+
         return userDto;
     }
 

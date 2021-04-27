@@ -14,6 +14,10 @@ spring:
             - Path=/user/**
           filters:
             - StripPrefix=1
+            - name: Hystrix
+              args:
+                name: HystrixFallbackHandler
+                fallbackUri: forward:/defaultfallback
         - id: BrandService
           uri: lb://ItemsCoreService/brand
           predicates:
