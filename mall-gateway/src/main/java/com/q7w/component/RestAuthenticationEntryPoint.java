@@ -29,7 +29,7 @@ public class RestAuthenticationEntryPoint implements ServerAuthenticationEntryPo
         response.getHeaders().set(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE);
         response.getHeaders().set("Access-Control-Allow-Origin","*");
         response.getHeaders().set("Cache-Control","no-cache");
-        ResponseData res = new ResponseData(ExceptionMsg.Unauthorized,"您尚未登录或登录已超时，请登陆后再进行操作!");
+        ResponseData res = new ResponseData(ExceptionMsg.Unauthorized,"验证失败：您尚未登录或登录已超时，请登陆后再进行操作!");
         //     String body= JSONUtil.toJsonStr(CommonResult.unauthorized(e.getMessage()));
         String body= JSONUtil.toJsonStr(res);
         DataBuffer buffer =  response.bufferFactory().wrap(body.getBytes(Charset.forName("UTF-8")));

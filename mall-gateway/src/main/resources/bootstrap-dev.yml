@@ -2,7 +2,7 @@ spring:
   cloud:
     nacos:
       discovery:
-        server-addr: http://localhost:8848
+        server-addr: http://nacos.q7w.cn:8849
       config:
-        server-addr: http://localhost:8848
+        server-addr: http://nacos.q7w.cn:8849
         file-extension: yaml

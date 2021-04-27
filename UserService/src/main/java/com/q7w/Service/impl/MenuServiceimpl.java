@@ -9,7 +9,9 @@ import com.q7w.Service.MenuService;
 import com.q7w.Service.RoleMenuService;
 import com.q7w.Service.UserRoleService;
 import com.q7w.Service.UserService;
+import com.q7w.common.exception.GlobalException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,24 +31,49 @@ public class MenuServiceimpl implements MenuService {
     UserRoleService userRoleService;
     @Autowired
     RoleMenuService roleMenuService;
+    private Menu findmenubyname(String name){
+        return menuDao.findByName(name);
+    }
+    private Menu findmenubyid(Long id){
+        Menu menu = menuDao.findById(id).get();
+        if (menu==null){
+            throw new GlobalException("808X01","菜单不存在");}
+        return menu;
+    }
     @Override
     public int create(Menu menu) {
-        return 0;
+        if (findmenubyname(menu.getName())!=null){return 2;}
+        menuDao.save(menu);
+        return 1;
     }
 
     @Override
     public int update(Long id, Menu menu) {
-        return 0;
+        Menu menudb = findmenubyid(id);
+        menudb.setName(menu.getName());
+        menudb.setNameZh(menu.getNameZh());
+        menudb.setComponent(menu.getComponent());
+        menudb.setIconCls(menu.getIconCls());
+        menudb.setNameZh(menu.getNameZh());
+        menuDao.save(menudb);
+        return 1;
     }
 
     @Override
     public int delete(List<Long> ids) {
-        return 0;
+        try{
+            menuDao.deleteById(ids.get(1));
+            return 1;
+        }catch (EmptyResultDataAccessException e)
+        {
+            return 2;
+        }
+
     }
 
     @Override
     public List<Menu> list() {
-        return null;
+        return menuDao.findAll();
     }
 
     @Override

@@ -1,7 +1,11 @@
 package com.q7w.Service.impl;
 
 import cn.hutool.core.util.StrUtil;
+import cn.hutool.json.JSONUtil;
+import com.nimbusds.jose.JOSEException;
+import com.nimbusds.jose.JWSObject;
 import com.q7w.DAO.UserDao;
+import com.q7w.DTO.Payload;
 import com.q7w.Entity.User;
 import com.q7w.Entity.Userpro;
 import com.q7w.Service.AuthService;
@@ -21,6 +25,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import cn.hutool.core.util.RandomUtil;
 
+import javax.servlet.http.HttpServletRequest;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,6 +49,8 @@ public class UserServiceimpl implements UserService {
     AuthService authService;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private HttpServletRequest request;
     @Override
     public User getUserByUsername(String username) {
         User user = userDao.findUserByUsername(username);
@@ -122,10 +131,28 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
-    public User getCurrentUser() {
-        return null;
+    public User getCurrentUser() throws ParseException, JOSEException {
+        String header = request.getHeader("Authorization");
+        String token = StrUtil.subAfter(header, "Bearer ", false);
+        JWSObject jwsObject = JWSObject.parse(token);
+        String payload = jwsObject.getPayload().toString();
+        Payload payloadDto = JSONUtil.toBean(payload, Payload.class);
+        return getUserByuid(payloadDto.getId());
     }
+    @Override
+    public String getcurrertusername() {
+        try {
+            String header = request.getHeader("Authorization");
+            String token = StrUtil.subAfter(header, "Bearer ", false);
+            JWSObject jwsObject = JWSObject.parse(token);
+            String payload = jwsObject.getPayload().toString();
+            Payload payloadDto = JSONUtil.toBean(payload, Payload.class);
+            return payloadDto.getUser_name();
+        }catch (ParseException p){
+            return "error";
+        }
 
+    }
     @Override
     public ResponseData login(String Username, String password) {
         if(StrUtil.isEmpty(Username)||StrUtil.isEmpty(password)){
@@ -141,8 +168,5 @@ public class UserServiceimpl implements UserService {
         return authService.getAccessToken(params);
     }
 
-    @Override
-    public String getcurrertusername() {
-        return "test-sys";
-    }
+
 }

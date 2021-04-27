@@ -24,25 +24,25 @@ public class Menu extends BaseEntity{
     /**
      * Menu access path.
      */
-    private String path;
+    private String path;//前端路径
     /**
      * Menu name.
      */
-    private String name;
+    private String name;//英文名
     /**
      * Menu name in Chinese.
      */
-    private String nameZh;
+    private String nameZh;//中文名（前端显示）
 
     /**
      * Menu icon class(use element-ui icons).
      */
-    private String iconCls;
+    private String iconCls;//图表
 
     /**
      * Front-end component name corresponding to menu.
      */
-    private String component;
+    private String component;//前端组件名称
     /**
      * Parent menu.
      */

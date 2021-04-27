@@ -12,5 +12,6 @@ import java.util.List;
 public interface MenuDao extends JpaRepository<Menu,Long> {
     List<Menu> findAllByParentId(Long pid);
    // Menu findById(Long id);
+    Menu findByName(String name);
 
 }

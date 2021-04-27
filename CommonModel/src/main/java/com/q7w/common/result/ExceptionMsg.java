@@ -2,10 +2,9 @@ package com.q7w.common.result;
 
 public enum ExceptionMsg {
     SUCCESS("200", "操作成功"),
-    SUCCESS_GET("200", "数据获取成功DB"),
     SUCCESS_LOGIN("200", "登录成功"),
     FAILED_403("403","资源禁止访问"),
-    Unauthorized("401","未授权"),
+    Unauthorized("401","验证失败"),
     FAILED("801","操作失败"),
     ParamError("802", "参数错误！"),
     BADERROR("803", "请求异常！"),

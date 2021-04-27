@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*;
  **/
 @RestController
 @Api(tags = "用户服务接口")
-@RequestMapping("/api/user")
+@RequestMapping("/api/admin/user")
 public class UserServiceController {
     @Autowired
     UserService userService;
@@ -45,6 +45,11 @@ public class UserServiceController {
     @ApiOperation("获取验证码接口")
     public ResponseData getauthcode(String email){
         return new ResponseData(ExceptionMsg.SUCCESS,userService.sendregmail("123",email));
+    }
+    @GetMapping("/getcurrentusername")
+    @ApiOperation("获取当前用户用户名")
+    public String getcurrentusername(){
+        return userService.getcurrertusername();
     }
     @GetMapping("/list")
     @ApiOperation("用户列表")
