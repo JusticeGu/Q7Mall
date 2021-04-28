@@ -16,4 +16,5 @@ public interface ImgDao extends JpaRepository<Goods_images,Integer> {
 
     @Query(nativeQuery =true,value = "select * from goods_images order by create_time desc limit 10")
     List<Goods_images> least10item();
+    Goods_images findByGidAndMaster(int gid,boolean master);
 }

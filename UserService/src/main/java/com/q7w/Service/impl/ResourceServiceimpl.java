@@ -109,7 +109,7 @@ public class ResourceServiceimpl implements ResourceService {
         for (Resource resource : resourceList) {
             Set<Long> roleIds = relationList.stream().filter(item -> item.getPid().equals(resource.getId())).map(RoleResource::getRid).collect(Collectors.toSet());
             List<String> roleNames = roleList.stream().filter(item -> roleIds.contains(item.getId())).map(item -> item.getId() + "_" + item.getName()).collect(Collectors.toList());
-            resourceRoleMap.put("/"+applicationName+resource.getUrl(),roleNames);
+            resourceRoleMap.put(resource.getUrl(),roleNames);
         }
         redisService.del(AuthConstant.RESOURCE_ROLES_MAP_KEY);
         redisService.hSetAll(AuthConstant.RESOURCE_ROLES_MAP_KEY, resourceRoleMap);
@@ -125,8 +125,8 @@ public class ResourceServiceimpl implements ResourceService {
     }
 
     @Override
-    public Set<String> listPermissionURLsByUser(String username) {
-        List<Role> roles = roleService.listRolesByUser(username);
+    public Set<String> listPermissionURLsByUser(Long uid) {
+        List<Role> roles = roleService.listRolesByUser(uid);
         Set<String> URLs = new HashSet<>();
 
         roles.forEach(r -> {
@@ -135,5 +135,12 @@ public class ResourceServiceimpl implements ResourceService {
         });
 
         return URLs;
+    }
+
+    @Override
+    public Object getrolrresmap() {
+        initResourceRolesMap();
+        Map<Object, Object> resourceRolesMap = redisService.hGetAll(AuthConstant.RESOURCE_ROLES_MAP_KEY);
+        return resourceRolesMap;
     }
 }

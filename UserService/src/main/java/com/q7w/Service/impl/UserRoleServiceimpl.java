@@ -24,13 +24,14 @@ public class UserRoleServiceimpl implements UserRoleService {
     }
 
     @Override
-    public void saveRoleChanges(Long uid, List<Role> roles) {
+    public void saveRoleChanges(Long uid, List<Long> rids) {
         userRoleDao.deleteAllByUid(uid);
-        roles.forEach(r -> {
+        rids.forEach(r -> {
             UserRole ur = new UserRole();
             ur.setUid(uid);
-            ur.setRid(r.getId());
+            ur.setRid(r);
             userRoleDao.save(ur);
         });
     }
+
 }

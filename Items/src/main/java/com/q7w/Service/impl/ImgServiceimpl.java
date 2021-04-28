@@ -29,9 +29,14 @@ public class ImgServiceimpl implements ImgService {
         Goods_images goods_images = new Goods_images();
         goods_images.setGid(gid);
         goods_images.setLink(url);
-        goods_images.set_master(is_master);
+        goods_images.setMaster(is_master);
         goods_images.setPosition(pos);
         imgDao.save(goods_images);
         return 1;
+    }
+
+    @Override
+    public Goods_images goodsmasterimg(int gid) {
+        return imgDao.findByGidAndMaster(gid,true);
     }
 }

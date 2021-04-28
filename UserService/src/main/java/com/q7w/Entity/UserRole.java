@@ -1,10 +1,12 @@
 package com.q7w.Entity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author xiaogu
@@ -30,5 +32,7 @@ public class UserRole extends BaseEntity implements Serializable {
      * Role id.
      */
     private Long rid;
+    @Transient
+    private List<Long> rids;
 }
 

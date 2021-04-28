@@ -15,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * @author xiaogu
  * @date 2021/3/30 15:44
@@ -50,12 +52,14 @@ public class GoodsController {
     @GetMapping("/listbycate")
     @ApiOperation("分类商品列表")
     public ResponseData listbycate(@RequestParam(value = "start",defaultValue = "0")Integer start,
-                                   @RequestParam(value = "num",defaultValue = "10")Integer num){
+                                   @RequestParam(value = "num",defaultValue = "10")Integer num,
+                                   @RequestParam(value = "cid")Integer cid){
         start = start<0?0:start;
         Sort sort = Sort.by(Sort.Direction.DESC, "id");
         Pageable pageable = PageRequest.of(start, num, sort);
-        Page<Goods> page = goodsService.list(pageable);
-        return new ResponseData(ExceptionMsg.SUCCESS,page);
+        //Page<Goods> page = goodsService.listbycate(cid);
+        List<Goods> list = goodsService.listbycate(cid);
+        return new ResponseData(ExceptionMsg.SUCCESS,list);
     }
     @GetMapping("/admin/list")
     @ApiOperation("商品列表C端")
@@ -83,7 +87,7 @@ public class GoodsController {
 
     }
     @GetMapping("/getlist")
-    @ApiOperation("B端商品列表")
+    @ApiOperation("B端商品列表-标题图片价格")
     public ResponseData listb(){
         return new ResponseData(ExceptionMsg.SUCCESS,goodsService.listall_b());
     }

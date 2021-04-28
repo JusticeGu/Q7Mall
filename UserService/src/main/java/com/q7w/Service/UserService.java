@@ -1,6 +1,7 @@
 package com.q7w.Service;
 
 import com.nimbusds.jose.JOSEException;
+import com.q7w.Entity.Role;
 import com.q7w.Entity.User;
 import com.q7w.Entity.Userpro;
 import com.q7w.common.domain.UserDto;
@@ -9,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * @author xiaogu
@@ -27,5 +29,8 @@ public interface UserService {
     Page<User> listall(Pageable pageable);
     public int extendUserinfo(Userpro userpro);
     public UserDto loadUserByUsername(String username);
+    public int allocrole(Long uid, List<Long> rids);
+    public List<Role> listuserroles(Long uid);
+    public int banuser(Long uid,int reson);
 
 }

@@ -20,7 +20,7 @@ public interface ResourceService {
      */
     boolean needFilter(String requestAPI);
     List<Resource> listPermsByRoleId(Long rid);
-    Set<String> listPermissionURLsByUser(String username);
+    Set<String> listPermissionURLsByUser(Long uid);
     /**
      * 修改资源
      */
@@ -50,4 +50,5 @@ public interface ResourceService {
      * 初始化资源角色规则
      */
     Map<String,List<String>> initResourceRolesMap();
+    Object getrolrresmap();
 }

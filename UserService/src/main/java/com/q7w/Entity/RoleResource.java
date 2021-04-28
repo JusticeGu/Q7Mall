@@ -5,6 +5,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author xiaogu
@@ -24,5 +25,7 @@ public class RoleResource extends BaseEntity implements Serializable {
     private Long rid;
 
     private Long pid;
+    @Transient
+    private List<Long> pids;
 }
 

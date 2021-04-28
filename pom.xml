@@ -11,7 +11,6 @@
     <modules>
         <module>UserService</module>
         <module>OrderService</module>
-        <module>AuthService</module>
         <module>CommonModel</module>
         <module>Items</module>
         <module>mall-gateway</module>

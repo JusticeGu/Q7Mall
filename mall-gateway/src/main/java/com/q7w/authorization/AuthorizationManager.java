@@ -6,9 +6,12 @@ import cn.hutool.json.JSONUtil;
 
 import com.q7w.common.constant.AuthConstant;
 import com.q7w.common.domain.UserDto;
+import com.q7w.common.service.RedisService;
 import com.q7w.config.IgnoreUrlsConfig;
 import com.nimbusds.jose.JWSObject;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.server.reactive.ServerHttpRequest;
@@ -35,11 +38,16 @@ import java.util.stream.Collectors;
  * Created by macro on 2020/6/19.
  */
 @Component
+@ConfigurationProperties("secure.ignore")
+@Data
 public class AuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
+    private List<String> adminurls;
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
     @Autowired
     private IgnoreUrlsConfig ignoreUrlsConfig;
+    @Autowired
+    RedisService redisService;
 
     @Override
     public Mono<AuthorizationDecision> check(Mono<Authentication> mono, AuthorizationContext authorizationContext) {
@@ -70,22 +78,35 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
             JWSObject jwsObject = JWSObject.parse(realToken);
             String userStr = jwsObject.getPayload().toString();
             UserDto userDto = JSONUtil.toBean(userStr, UserDto.class);
-            if (AuthConstant.ADMIN_CLIENT_ID.equals(userDto.getClientId()) && !pathMatcher.match(AuthConstant.ADMIN_URL_PATTERN, uri.getPath())) {
-                return Mono.just(new AuthorizationDecision(false));
-            }
-            if (AuthConstant.PORTAL_CLIENT_ID.equals(userDto.getClientId()) && pathMatcher.match(AuthConstant.ADMIN_URL_PATTERN, uri.getPath())) {
-                return Mono.just(new AuthorizationDecision(false));
+            //管理员不可以访问普通用户页面（已取消）
+//            if (AuthConstant.ADMIN_CLIENT_ID.equals(userDto.getClientId()) && !pathMatcher.match(AuthConstant.ADMIN_URL_PATTERN, uri.getPath())) {
+//                return Mono.just(new AuthorizationDecision(false));
+//            }
+            //普通用户不可以访问管理员页面
+//            if (AuthConstant.PORTAL_CLIENT_ID.equals(userDto.getClientId()) && pathMatcher.match(AuthConstant.ADMIN_URL_PATTERN, uri.getPath())) {
+//                return Mono.just(new AuthorizationDecision(false));
+//            }
+
+            //用户直接访问端路径直接放行
+//        if (pathMatcher.match(AuthConstant.ADMIN_URL_PATTERN, uri.getPath())) {
+//            return Mono.just(new AuthorizationDecision(true));
+//        }
+
+            List<String> manageurls = adminurls;
+            for (String adminurl : manageurls) {
+                if (pathMatcher.match(adminurl, uri.getPath()) && !AuthConstant.ADMIN_CLIENT_ID.equals(userDto.getClientId())) {
+                    return Mono.just(new AuthorizationDecision(false));
+                }
             }
         } catch (ParseException e) {
             e.printStackTrace();
             return Mono.just(new AuthorizationDecision(false));
         }
-        //非管理端路径直接放行
-        if (!pathMatcher.match(AuthConstant.ADMIN_URL_PATTERN, uri.getPath())) {
-            return Mono.just(new AuthorizationDecision(true));
-        }
+
         //管理端路径需校验权限
-        Map<Object, Object> resourceRolesMap = redisTemplate.opsForHash().entries(AuthConstant.RESOURCE_ROLES_MAP_KEY);
+     //   Map<Object, Object> resourceRolesMap = redisTemplate.opsForHash().entries(AuthConstant.RESOURCE_ROLES_MAP_KEY);
+        Map<Object, Object> resourceRolesMap =redisService.hGetAll(AuthConstant.RESOURCE_ROLES_MAP_KEY);
+        redisService.set("test","value",600);
         Iterator<Object> iterator = resourceRolesMap.keySet().iterator();
         List<String> authorities = new ArrayList<>();
         while (iterator.hasNext()) {

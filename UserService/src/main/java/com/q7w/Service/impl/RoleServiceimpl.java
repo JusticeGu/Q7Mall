@@ -1,10 +1,7 @@
 package com.q7w.Service.impl;
 
 import com.q7w.DAO.RoleDao;
-import com.q7w.Entity.Menu;
-import com.q7w.Entity.Resource;
-import com.q7w.Entity.Role;
-import com.q7w.Entity.UserRole;
+import com.q7w.Entity.*;
 import com.q7w.Service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -29,6 +26,10 @@ public class RoleServiceimpl implements RoleService {
     UserService userService;
     @Autowired
     UserRoleService userRoleService;
+    @Autowired
+    RoleMenuService roleMenuService;
+    @Autowired
+    RoleResourceService roleResourceService;
     @Override
     public int create(Role role) {
         role.setCreateTime(new Date().getTime());
@@ -77,58 +78,45 @@ public class RoleServiceimpl implements RoleService {
     }
 
     @Override
-    public List<Role> listRolesByUser(String username) {
-        Long uid =  userService.getUserByUsername(username).getId();
+    public List<Role> listRolesByUser(Long uid) {
         List<Role> roles = new ArrayList<>();
         List<UserRole> urs = userRoleService.listAllByUid(uid);
         urs.forEach(ur -> roles.add(roleDao.findById(ur.getRid()).get()));
         return roles;
     }
-//    @Override
-//    public List<Menu> getMenuList(Long adminId) {
-//        return roleDao.getMenuList(adminId);
-//    }
-//
-//    @Override
-//    public List<Menu> listMenu(Long roleId) {
-//        return roleDao.getMenuListByRoleId(roleId);
-//    }
-//
-//    @Override
-//    public List<Resource> listResource(Long roleId) {
-//        return roleDao.getResourceListByRoleId(roleId);
-//    }
-//
-//    @Override
-//    public int allocMenu(Long roleId, List<Long> menuIds) {
-//        //先删除原有关系
-//        RoleMenuRelationExample example=new RoleMenuRelationExample();
-//        example.createCriteria().andRoleIdEqualTo(roleId);
-//        roleMenuRelationMapper.deleteByExample(example);
-//        //批量插入新关系
-//        for (Long menuId : menuIds) {
-//            RoleMenuRelation relation = new RoleMenuRelation();
-//            relation.setRoleId(roleId);
-//            relation.setMenuId(menuId);
-//            roleMenuRelationMapper.insert(relation);
-//        }
-//        return menuIds.size();
- //   }
 
-//    @Override
-//    public int allocResource(Long roleId, List<Long> resourceIds) {
-//        //先删除原有关系
-//        RoleResourceRelationExample example=new RoleResourceRelationExample();
-//        example.createCriteria().andRoleIdEqualTo(roleId);
-//        roleResourceRelationMapper.deleteByExample(example);
-//        //批量插入新关系
-//        for (Long resourceId : resourceIds) {
-//            RoleResourceRelation relation = new RoleResourceRelation();
-//            relation.setRoleId(roleId);
-//            relation.setResourceId(resourceId);
-//            roleResourceRelationMapper.insert(relation);
-//        }
-//        resourceService.initResourceRolesMap();
-//        return resourceIds.size();
-//    }
+    @Override
+    public List<Menu> listroleMenu(Long roleId) {
+        return menuService.getMenusByRoleId(roleId);
+    }
+
+    @Override
+    public List<Resource> listroleResource(Long roleId) {
+        return resourceService.listPermsByRoleId(roleId);
+    }
+
+    @Override
+    public int allocMenu(Long roleId, List<Long> menuIds) {
+        roleMenuService.deleteAllByRid(roleId);
+      //  批量插入新关系
+        for (Long menuId : menuIds) {
+            RoleMenu rolemenu = new RoleMenu();
+            rolemenu.setRid(roleId);
+            rolemenu.setMid(menuId);
+            roleMenuService.save(rolemenu);
+        }
+        return menuIds.size();
+    }
+
+    @Override
+    public int allocResource(Long roleId, List<Long> resourceIds) {
+        roleResourceService.savePermChanges(roleId,resourceIds);
+        return 1;
+    }
+
+    @Override
+    public int allocuserrole(Long uid, List<Long> rids) {
+        userRoleService.saveRoleChanges(uid,rids);
+        return 1;
+    }
 }

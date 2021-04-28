@@ -15,5 +15,6 @@ import java.util.List;
 
 public interface UserRoleService {
     public List<UserRole> listAllByUid(Long uid);
-    public void saveRoleChanges(Long uid, List<Role> roles);
+    public void saveRoleChanges(Long uid, List<Long> rids);
+
 }

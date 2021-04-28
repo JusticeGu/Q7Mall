@@ -5,6 +5,7 @@ import lombok.ToString;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @author xiaogu
@@ -24,4 +25,6 @@ public class RoleMenu extends BaseEntity implements Serializable {
     private Long rid;
 
     private Long mid;
+    @Transient
+    private List<Long> mids;
 }

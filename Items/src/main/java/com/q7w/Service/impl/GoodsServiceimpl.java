@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaogu
@@ -65,7 +66,11 @@ public class GoodsServiceimpl implements GoodsService {
 
     @Override
     public List<Spu> listall_b() {
-        List<Spu> spus = goodsDAO.getAllByStatus();
+        List<Goods> goodlist = goodsDAO.findAllByStatus(1);
+        List<Spu> spus= goodlist.stream().map(goods -> (Spu) new Spu().convertFrom(goods)).collect(Collectors.toList());
+        for (Spu spu : spus) {
+         spu.setImgurl(imgService.goodsmasterimg(spu.getId()));
+        }
         return spus;
     }
 
@@ -141,7 +146,6 @@ public class GoodsServiceimpl implements GoodsService {
             goods.addAll(m.getGoodsList());
         });
         cates.removeIf(m -> m.getPid() != 0);
-
         return goods;
 
     }

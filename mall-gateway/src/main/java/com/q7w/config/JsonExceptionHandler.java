@@ -98,7 +98,7 @@ public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
         Map<String, Object> map = new HashMap<>();
         map.put("rspCode", "501");
         map.put("rspMsg", "网关:服务暂不可用");
-        map.put("data", "服务暂时不可用，请稍后重试");
+        map.put("data", "服务暂时不可用，请稍后重试"+errorMessage);
         return map;
     }
 

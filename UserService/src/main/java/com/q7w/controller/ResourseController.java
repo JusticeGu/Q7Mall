@@ -56,5 +56,10 @@ public class ResourseController {
         if (status==1){return new ResponseData(ExceptionMsg.SUCCESS,"资源菜单更新成功"); }
         return new ResponseData(ExceptionMsg.FAILED,"资源菜单更新失败");
     }
+    @GetMapping("/getroleresmap")
+    @ApiOperation("资源查询")
+    public ResponseData getroleresmap(){
+        return new ResponseData(ExceptionMsg.SUCCESS,resourceService.getrolrresmap());
+    }
 
 }

@@ -1,5 +1,7 @@
 package com.q7w.Service;
 
+import com.q7w.Entity.Menu;
+import com.q7w.Entity.Resource;
 import com.q7w.Entity.Role;
 
 import java.util.List;
@@ -29,7 +31,7 @@ public interface RoleService {
      */
     List<Role> list();
     Role findById(Long id);
-    List<Role> listRolesByUser(String username);
+    List<Role> listRolesByUser(Long uid);
     /**
      * 分页获取角色列表
      */
@@ -43,22 +45,23 @@ public interface RoleService {
     /**
      * 获取角色相关菜单
      */
-  //  List<Menu> listMenu(Long roleId);
+    List<Menu> listroleMenu(Long roleId);
 
     /**
      * 获取角色相关资源
      */
-  //  List<Resource> listResource(Long roleId);
+    List<Resource> listroleResource(Long roleId);
 
     /**
      * 给角色分配菜单
      */
 //    @Transactional
-//    int allocMenu(Long roleId, List<Long> menuIds);
+    int allocMenu(Long roleId, List<Long> menuIds);
 
     /**
      * 给角色分配资源
      */
 //    @Transactional
- //   int allocResource(Long roleId, List<Long> resourceIds);
+    int allocResource(Long roleId, List<Long> resourceIds);
+    int allocuserrole(Long uid,List<Long> rids);
 }

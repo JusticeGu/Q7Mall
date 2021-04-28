@@ -74,5 +74,5 @@ org:
   my:
     jwt:
       #跳过认证的路由
-      skip-auth-urls:
+      adminurls:
         - /baidu

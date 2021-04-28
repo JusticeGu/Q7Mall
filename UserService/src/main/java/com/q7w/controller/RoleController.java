@@ -1,9 +1,9 @@
 package com.q7w.controller;
 
 import com.q7w.Entity.Role;
-import com.q7w.Service.RoleMenuService;
-import com.q7w.Service.RoleResourceService;
-import com.q7w.Service.RoleService;
+import com.q7w.Entity.RoleMenu;
+import com.q7w.Entity.RoleResource;
+import com.q7w.Service.*;
 import com.q7w.common.result.ExceptionMsg;
 import com.q7w.common.result.ResponseData;
 import io.swagger.annotations.Api;
@@ -26,10 +26,8 @@ import java.util.List;
 public class RoleController {
     @Autowired
     RoleService roleService;
-    @Autowired
-    RoleResourceService roleResourceService;
-    @Autowired
-    RoleMenuService roleMenuService;
+
+
     @GetMapping("/list")
     @ApiOperation("角色列表")
     public ResponseData listall(){
@@ -38,7 +36,12 @@ public class RoleController {
     @GetMapping("/rolemenulist")
     @ApiOperation("角色可见菜单查询")
     public ResponseData rolemenulist(@RequestParam Long rid){
-        return new ResponseData(ExceptionMsg.SUCCESS,roleMenuService.findAllByRid(rid));
+        return new ResponseData(ExceptionMsg.SUCCESS,roleService.listroleMenu(rid));
+    }
+    @GetMapping("/rolereslist")
+    @ApiOperation("角色权限列表")
+    public ResponseData rolereslist(@RequestParam Long rid){
+        return new ResponseData(ExceptionMsg.SUCCESS,roleService.listroleResource(rid));
     }
     @PostMapping("/add")
     @ApiOperation("角色新增")
@@ -65,23 +68,23 @@ public class RoleController {
     }
     @PostMapping("/role_menu")
     @ApiOperation("角色添加菜单")
-    public ResponseData addrolemenu(@RequestBody Long rid, LinkedHashMap mids){
-        boolean status = roleMenuService.updateRoleMenu(rid,mids);
-        if (status){return new ResponseData(ExceptionMsg.SUCCESS,"角色菜单更新成功"); }
+    public ResponseData addrolemenu(@RequestBody RoleMenu roleMenu){
+        int status = roleService.allocMenu(roleMenu.getRid(),roleMenu.getMids());
+        if (status==1){return new ResponseData(ExceptionMsg.SUCCESS,"角色菜单更新成功"); }
         return new ResponseData(ExceptionMsg.FAILED,"角色菜单更新失败");
     }
     @PostMapping("/role_res")
     @ApiOperation("角色添加权限")
-    public ResponseData addroleres(@RequestBody Role role){
-        int status = roleService.create(role);
+    public ResponseData addroleres(@RequestBody RoleResource roleResource){
+        int status = roleService.allocResource(roleResource.getRid(),roleResource.getPids());
         if (status==1){return new ResponseData(ExceptionMsg.SUCCESS,"角色权限更新成功"); }
         return new ResponseData(ExceptionMsg.FAILED,"角色权限更新失败");
     }
     @PutMapping("/role_menu")
     @ApiOperation("角色菜单更新")
-    public ResponseData updaterolemenu(@RequestBody Long rid, LinkedHashMap mids){
-        boolean status = roleMenuService.updateRoleMenu(rid,mids);
-        if (status){return new ResponseData(ExceptionMsg.SUCCESS,"角色菜单更新成功"); }
+    public ResponseData updaterolemenu(@RequestBody RoleMenu roleMenu){
+        int status = roleService.allocMenu(roleMenu.getRid(),roleMenu.getMids());
+        if (status>=1){return new ResponseData(ExceptionMsg.SUCCESS,status+"条菜单记录已更新"); }
         return new ResponseData(ExceptionMsg.FAILED,"角色菜单更新失败");
     }
     @PutMapping("/role_res")

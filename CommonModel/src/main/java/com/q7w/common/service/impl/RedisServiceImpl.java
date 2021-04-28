@@ -89,6 +89,7 @@ public class RedisServiceImpl implements RedisService {
     @Override
     public Map<Object, Object> hGetAll(String key) {
         return redisTemplate.opsForHash().entries(key);
+
     }
 
     @Override

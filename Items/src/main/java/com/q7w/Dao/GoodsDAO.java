@@ -25,7 +25,8 @@ public interface GoodsDAO extends JpaRepository<Goods,Integer> {
     List<Goods> findAllByBrand(Brand brand);
     List<Goods> findAllByBrandAndStatus(Brand brand,int status);
     @Query(nativeQuery =true,value = "select id,name,original from items order by create_time desc")
-    List getAllByStatus();
+    List<Goods> getAllByStatus();
+
 
 
 

@@ -12,4 +12,5 @@ import java.util.List;
 public interface RoleResourceDao extends JpaRepository<RoleResource,Long> {
     List<RoleResource> findAllByRid(Long rid);
     void  deleteAllByRid(Long rid);
+    void  deleteAllByPid(Long pid);
 }

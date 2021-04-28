@@ -1,6 +1,7 @@
 package com.q7w.controller;
 
 import com.q7w.Entity.User;
+import com.q7w.Entity.UserRole;
 import com.q7w.Entity.Userpro;
 import com.q7w.Service.UserService;
 import com.q7w.common.result.ExceptionMsg;
@@ -15,6 +16,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 /**
@@ -51,6 +54,10 @@ public class UserServiceController {
     public String getcurrentusername(){
         return userService.getcurrertusername();
     }
+    @GetMapping("/getuserrole")
+    @ApiOperation("查看用户角色")
+    public ResponseData getuserrole(Long uid){
+        return new ResponseData(ExceptionMsg.SUCCESS,userService.listuserroles(uid));}
     @GetMapping("/list")
     @ApiOperation("用户列表")
     public ResponseData listitem(@RequestParam(value = "start",defaultValue = "0")Integer start,
@@ -74,4 +81,16 @@ public class UserServiceController {
         return new ResponseData(ExceptionMsg.ERROR,"提交失败");
     }
 
+    @PostMapping("/allocUserrole")
+    @ApiOperation("用户角色分配")
+    public ResponseData allocUserrole(@RequestBody UserRole userRole){
+        int status = userService.allocrole(userRole.getUid(),userRole.getRids());
+        switch (status) {
+            case 1:
+                return new ResponseData(ExceptionMsg.SUCCESS,"分配成功");
+            case 2:
+                return new ResponseData(ExceptionMsg.FAILED,"分配失败");
+        }
+        return new ResponseData(ExceptionMsg.ERROR,"提交失败");
+    }
 }

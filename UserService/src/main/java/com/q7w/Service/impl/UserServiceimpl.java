@@ -1,20 +1,24 @@
 package com.q7w.Service.impl;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSObject;
 import com.q7w.DAO.UserDao;
 import com.q7w.DTO.Payload;
+import com.q7w.Entity.Role;
 import com.q7w.Entity.User;
 import com.q7w.Entity.Userpro;
 import com.q7w.Service.AuthService;
+import com.q7w.Service.RoleService;
 import com.q7w.Service.UserCacheService;
 import com.q7w.Service.UserService;
 import com.q7w.common.constant.AuthConstant;
 import com.q7w.common.domain.UserDto;
 
 import com.q7w.common.exception.GlobalException;
+import com.q7w.common.result.ExceptionMsg;
 import com.q7w.common.result.ResponseData;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +33,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author xiaogu
@@ -51,6 +57,8 @@ public class UserServiceimpl implements UserService {
     private PasswordEncoder passwordEncoder;
     @Autowired
     private HttpServletRequest request;
+    @Autowired
+    RoleService roleService;
     @Override
     public User getUserByUsername(String username) {
         User user = userDao.findUserByUsername(username);
@@ -68,8 +76,12 @@ public class UserServiceimpl implements UserService {
         userDto.setAccountNonExpired(user.isAccountNonExpired());
         userDto.setAccountNonLocked(user.isAccountNonLocked());
         userDto.setCredentialsNonExpired(user.isCredentialsNonExpired());
+        List<Role> roleList = listuserroles(user.getId());
         userDto.setEnabled(user.isEnabled());
-
+        if(CollUtil.isNotEmpty(roleList)){
+            List<String> roleStrList = roleList.stream().map(item -> item.getId() + "_" + item.getName()).collect(Collectors.toList());
+            userDto.setRoles(roleStrList);
+        }
         return userDto;
     }
 
@@ -158,6 +170,18 @@ public class UserServiceimpl implements UserService {
         }
 
     }
+
+    @Override
+    public int allocrole(Long uid, List<Long> rids) {
+        roleService.allocuserrole(uid,rids);
+        return 1;
+    }
+
+    @Override
+    public List<Role> listuserroles(Long uid) {
+        return roleService.listRolesByUser(uid);
+    }
+
     @Override
     public ResponseData login(String Username, String password) {
         if(StrUtil.isEmpty(Username)||StrUtil.isEmpty(password)){
@@ -173,5 +197,20 @@ public class UserServiceimpl implements UserService {
         return authService.getAccessToken(params);
     }
 
-
+    @Override
+    public int banuser(Long uid,int reson) {
+        User user = getUserByuid(uid);
+        switch (reson) {
+            case 1:
+                user.setAccountNonLocked(false);
+            case 2:
+                user.setCredentialsNonExpired(false);
+            case 3:
+                user.setAccountNonExpired(false);
+            case 4:
+                user.setEnabled(false);
+        }
+        userDao.save(user);
+        return 1;
+    }
 }

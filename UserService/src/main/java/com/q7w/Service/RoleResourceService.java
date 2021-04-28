@@ -11,5 +11,7 @@ import java.util.List;
  **/
 public interface RoleResourceService {
     List<RoleResource> findAllByRid(Long rid);
-    public void savePermChanges(Long rid, List<Resource> resources);
+    public void savePermChanges(Long rid, List<Long> resourceIds);
+    int delresource(Long resid);
+    int delrole(Long rid);
 }

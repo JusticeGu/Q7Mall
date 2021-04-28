@@ -30,6 +30,6 @@ public class Goods_images extends BaseEntity implements Serializable {
     private int gid;//商品ID
     private String link;//图片URL地址
     private int position;//图片位置
-    private boolean is_master;//是否主图
+    private boolean master;//是否主图
 
 }
