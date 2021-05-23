@@ -19,7 +19,7 @@ import java.util.List;
  **/
 @RestController
 @Api(tags = "用户菜单接口")
-@RequestMapping("/api/admin/menu")
+@RequestMapping("/v1/menu")
 public class MenuController {
     @Autowired
     MenuService menuService;
@@ -51,4 +51,10 @@ public class MenuController {
         if (status==1){return new ResponseData(ExceptionMsg.SUCCESS,"更新菜单成功"); }
         return new ResponseData(ExceptionMsg.FAILED,"菜单更新失败");
     }
+    @GetMapping("/getmymenu")
+    @ApiOperation("获取当前登录用户菜单")
+    public List<Menu> getCurrentUserMenus() {
+        return menuService.getMenusByCurrentUser();
+    }
+
 }

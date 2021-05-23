@@ -22,9 +22,13 @@ public interface AuthConstant {
     String ADMIN_CLIENT_ID = "admin-app";
 
     /**
-     * 前台商城client_id
+     * 前台移动端商城client_id
      */
     String PORTAL_CLIENT_ID = "portal-app";
+    /**
+     * 前台WEB端商城client_id
+     */
+    String WEB_CLIENT_ID = "web-app";
 
     /**
      * 后台管理接口路径匹配
@@ -35,6 +39,35 @@ public interface AuthConstant {
      * Redis缓存权限规则key
      */
     String RESOURCE_ROLES_MAP_KEY = "auth:resourceRolesMap";
+    /**
+     * Redis缓存权限规则key
+     */
+    String User_Black_Table_KEY = "auth:Blacktable";
+    String User_Auth_KEY = "auth:User";
+    /**
+     * Basic认证前缀
+     */
+    String BASIC_PREFIX = "Basic ";
+
+    /**
+     * JWT载体key
+     */
+    String JWT_PAYLOAD_KEY = "payload";
+
+    /**
+     * JWT ID 唯一标识
+     */
+    String JWT_JTI = "jti";
+
+    /**
+     * JWT ID 唯一标识
+     */
+    String JWT_EXP = "exp";
+    String USER_ID_KEY = "id";
+
+    String USER_NAME_KEY = "user_name";
+
+    String CLIENT_ID_KEY = "client_id";
 
     /**
      * 认证信息Http请求头

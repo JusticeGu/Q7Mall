@@ -1,7 +1,9 @@
 package com.q7w.common.result;
 
-import java.io.Serializable;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.io.Serializable;
+@JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
 public class ResponseData extends Response implements Serializable {
     private static final long serialVersionUID = 3033545151355633270L;
     private Object data;

@@ -1,6 +1,11 @@
 package com.q7w.common.result;
 
-public class Response {
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import java.io.Serializable;
+
+@JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
+public class Response implements Serializable {
     /** 返回信息码*/
     private String rspCode="200";
     /** 返回信息内容*/

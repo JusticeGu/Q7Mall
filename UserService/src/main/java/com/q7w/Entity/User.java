@@ -21,6 +21,7 @@ public class User extends BaseEntity  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String username;
     @JsonIgnore
     private String password;
@@ -30,7 +31,7 @@ public class User extends BaseEntity  {
     private boolean credentialsNonExpired;//认证信息是否不存在
     private boolean enabled;//是否可用
     @Transient
-    private List<Userpro> userpros;
+    private Userpro userpros;
 
 
 }

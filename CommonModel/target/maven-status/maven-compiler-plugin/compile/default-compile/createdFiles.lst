@@ -1,13 +1,17 @@
+com/q7w/common/result/CommonResult.class
 com/q7w/common/constant/AuthConstant.class
 com/q7w/common/domain/SwaggerProperties$SwaggerPropertiesBuilder.class
 com/q7w/common/jwt/JwtUtils.class
 com/q7w/common/config/BaseRedisConfig.class
 com/q7w/common/service/impl/RedisServiceImpl.class
 com/q7w/common/jwt/JWTToken.class
+com/q7w/common/domain/Payload.class
 com/q7w/common/config/BaseSwaggerConfig.class
 com/q7w/common/domain/UserDto.class
 com/q7w/common/result/ResponseData.class
+com/q7w/common/result/IErrorCode.class
 com/q7w/common/domain/SwaggerProperties.class
 com/q7w/common/result/Response.class
 com/q7w/common/service/RedisService.class
 com/q7w/common/result/ExceptionMsg.class
+com/q7w/common/result/ResultCode.class

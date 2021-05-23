@@ -26,7 +26,7 @@ public interface MenuService {
     /**
      * 获取所有角色列表
      */
-    List<Menu> list();
+    List list();
     List<Menu> getAllByParentId(Long parentId);
     public List<Menu> getMenusByCurrentUser();
     public List<Menu> getMenusByRoleId(Long rid);

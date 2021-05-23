@@ -19,7 +19,9 @@ public interface ResourceService {
      * 比较权限
      */
     boolean needFilter(String requestAPI);
+    List<Resource> listbytype(Integer type);
     List<Resource> listPermsByRoleId(Long rid);
+    List<Resource> listPermsByRoleId(Long rid,Integer type);
     Set<String> listPermissionURLsByUser(Long uid);
     /**
      * 修改资源

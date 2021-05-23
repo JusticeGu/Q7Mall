@@ -19,7 +19,7 @@ import java.util.List;
  **/
 @RestController
 @Api(tags = "用户资源接口")
-@RequestMapping("/api/admin/Resourse")
+@RequestMapping("/v1/resource")
 public class ResourseController {
     @Autowired
     ResourceService resourceService;
@@ -28,21 +28,26 @@ public class ResourseController {
     public ResponseData reslist(){
         return new ResponseData(ExceptionMsg.SUCCESS,resourceService.listAll());
     }
-    @PostMapping("/add")
+    @GetMapping("/listbytype")
+    @ApiOperation("资源查询")
+    public ResponseData reslist(@RequestParam Integer type){
+        return new ResponseData(ExceptionMsg.SUCCESS,resourceService.listbytype(type));
+    }
+    @PostMapping("")
     @ApiOperation("资源新增")
     public ResponseData addResourse(@RequestBody Resource resource){
         int status = resourceService.create(resource);
         if (status==1){return new ResponseData(ExceptionMsg.SUCCESS,"新增资源成功"); }
         return new ResponseData(ExceptionMsg.FAILED,"资源新增失败");
     }
-    @DeleteMapping("/del")
+    @DeleteMapping("")
     @ApiOperation("资源删除")
     public ResponseData delResourse(Long rid){
         int status = resourceService.delete(rid);
         if (status==1){return new ResponseData(ExceptionMsg.SUCCESS,"删除资源成功"); }
         return new ResponseData(ExceptionMsg.FAILED,"资源删除失败");
     }
-    @PutMapping("/update")
+    @PutMapping("")
     @ApiOperation("资源更新")
     public ResponseData updateResourse(@RequestBody Resource resource){
         int status = resourceService.update(resource.getId(),resource);

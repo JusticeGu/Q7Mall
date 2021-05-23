@@ -14,6 +14,7 @@ import org.springframework.web.reactive.function.server.*;
 import reactor.core.publisher.Mono;
 
 /**
+ * 熔断异常配置类
  * @author xiaogu
  * @date 2020/7/30 17:03
  **/

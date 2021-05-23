@@ -26,4 +26,8 @@ public class Resource extends BaseEntity implements Serializable {
     private String dscp;//权限简介
 
     private String url;//授权url
+
+    private String method;//请求方法
+
+    private int type;//权限类型 1-接口权限 2-按钮权限
 }

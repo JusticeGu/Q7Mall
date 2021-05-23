@@ -42,6 +42,16 @@ public class OrderController {
     public ResponseData queryorderbyid(Long oid){
         return new ResponseData(ExceptionMsg.SUCCESS,orderService.querybyid(oid));
     }
+    @GetMapping("/queryuid")
+    @ApiOperation("b端订单查询(UID)")
+    public ResponseData queryorderbyuid(Long uid){
+        return new ResponseData(ExceptionMsg.SUCCESS,orderService.querybyuser(uid));
+    }
+    @GetMapping("/ownorderlist")
+    @ApiOperation("用户本人订单查询")
+    public ResponseData queryorderbyuid(){
+        return new ResponseData(ExceptionMsg.SUCCESS,orderService.querybyuser());
+    }
     @GetMapping("/createorder")
     @ApiOperation("生成订单")
     public ResponseData createorder(int skuid,int num){

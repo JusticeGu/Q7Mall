@@ -114,8 +114,14 @@ public class OrderServiceimpl implements OrderService {
     }
 
     @Override
-    public List<Order> querybyuser(Integer uid) {
+    public List<Order> querybyuser(long uid) {
         return null;
+    }
+
+    @Override
+    public List<Order> querybyuser() {
+        Long uid = userFeign.getuid();
+        return querybyuser(uid);
     }
 
     @Override

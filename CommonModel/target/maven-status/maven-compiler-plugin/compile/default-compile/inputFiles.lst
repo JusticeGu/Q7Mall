@@ -2,11 +2,15 @@
 /Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/domain/UserDto.java
 /Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/result/ResponseData.java
 /Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/result/Response.java
+/Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/result/CommonResult.java
+/Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/service/RedisService.java
+/Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/config/BaseRedisConfig.java
+/Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/result/IErrorCode.java
+/Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/result/ResultCode.java
 /Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/result/ExceptionMsg.java
 /Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/config/BaseSwaggerConfig.java
 /Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/jwt/JWTToken.java
 /Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/service/impl/RedisServiceImpl.java
-/Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/service/RedisService.java
-/Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/config/BaseRedisConfig.java
+/Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/domain/Payload.java
 /Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/jwt/JwtUtils.java
 /Users/gxj/Documents/Q7Mall/CommonModel/src/main/java/com/q7w/common/constant/AuthConstant.java

@@ -2,12 +2,14 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="UserCoreService" />
         <module name="UserService" />
+        <module name="AuthService" />
         <module name="Items" />
         <module name="CommonExtend" />
         <module name="OrderService" />
@@ -16,6 +18,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel target="8">
+      <module name="Auth" target="8" />
       <module name="AuthService" target="8" />
       <module name="CommonTool" target="8" />
       <module name="Gateway" target="8" />

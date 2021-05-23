@@ -32,13 +32,12 @@ public class Menu extends BaseEntity{
     /**
      * Menu name in Chinese.
      */
-    private String nameZh;//中文名（前端显示）
+    private String label;//中文名（前端显示）
 
     /**
      * Menu icon class(use element-ui icons).
      */
-    private String iconCls;//图表
-
+    private String iconCls;//图标
     /**
      * Front-end component name corresponding to menu.
      */
@@ -47,6 +46,10 @@ public class Menu extends BaseEntity{
      * Parent menu.
      */
     private Long parentId;
+    /**
+     * 重定向页面
+     */
+    private String redirect;
     /**
      * Transient property for storing children menus.
      */

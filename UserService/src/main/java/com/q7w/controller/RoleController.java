@@ -22,7 +22,7 @@ import java.util.List;
  **/
 @RestController
 @Api(tags = "用户角色接口")
-@RequestMapping("/api/admin/role")
+@RequestMapping("/v1/role")
 public class RoleController {
     @Autowired
     RoleService roleService;
@@ -33,24 +33,29 @@ public class RoleController {
     public ResponseData listall(){
         return new ResponseData(ExceptionMsg.SUCCESS,roleService.list());
     }
-    @GetMapping("/rolemenulist")
+    @GetMapping("/{rid}/menus")
     @ApiOperation("角色可见菜单查询")
-    public ResponseData rolemenulist(@RequestParam Long rid){
+    public ResponseData rolemenulist(@PathVariable Long rid){
         return new ResponseData(ExceptionMsg.SUCCESS,roleService.listroleMenu(rid));
     }
-    @GetMapping("/rolereslist")
+    @GetMapping("/{rid}/resource")
     @ApiOperation("角色权限列表")
-    public ResponseData rolereslist(@RequestParam Long rid){
+    public ResponseData rolereslist(@PathVariable Long rid,@RequestParam Integer type){
         return new ResponseData(ExceptionMsg.SUCCESS,roleService.listroleResource(rid));
     }
-    @PostMapping("/add")
+    @GetMapping("/{rid}")
+    @ApiOperation("角色查询")
+    public ResponseData rolequery(@PathVariable Long rid){
+        return new ResponseData(ExceptionMsg.SUCCESS,rid);
+    }
+    @PostMapping("")
     @ApiOperation("角色新增")
     public ResponseData addrole(@RequestBody Role role){
         int status = roleService.create(role);
         if (status==1){return new ResponseData(ExceptionMsg.SUCCESS,"新增角色成功"); }
         return new ResponseData(ExceptionMsg.FAILED,"角色新增失败");
     }
-    @DeleteMapping("/del")
+    @DeleteMapping("")
     @ApiOperation("角色删除")
     public ResponseData delrole(Long rid){
         List<Long> rids = new ArrayList();
@@ -59,7 +64,7 @@ public class RoleController {
         if (status==1){return new ResponseData(ExceptionMsg.SUCCESS,"删除角色成功"); }
         return new ResponseData(ExceptionMsg.FAILED,"角色删除失败");
     }
-    @PutMapping("/update")
+    @PutMapping("")
     @ApiOperation("角色更新")
     public ResponseData updaterole(@RequestBody Role role){
         int status = roleService.update(role.getId(),role);

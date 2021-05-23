@@ -2,25 +2,21 @@ package com.q7w.Service.impl;
 
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
-import cn.hutool.json.JSONUtil;
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSObject;
 import com.q7w.DAO.UserDao;
-import com.q7w.DTO.Payload;
 import com.q7w.Entity.Role;
 import com.q7w.Entity.User;
 import com.q7w.Entity.Userpro;
-import com.q7w.Service.AuthService;
-import com.q7w.Service.RoleService;
-import com.q7w.Service.UserCacheService;
-import com.q7w.Service.UserService;
+import com.q7w.Service.*;
+import com.q7w.VO.Userinfo;
 import com.q7w.common.constant.AuthConstant;
 import com.q7w.common.domain.UserDto;
 
 import com.q7w.common.exception.GlobalException;
-import com.q7w.common.result.ExceptionMsg;
-import com.q7w.common.result.ResponseData;
+import com.q7w.common.result.CommonResult;
 
+import com.q7w.common.result.ResultCode;
+import com.q7w.common.service.RedisService;
+import com.q7w.common.util.RequestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -30,8 +26,9 @@ import org.springframework.stereotype.Service;
 import cn.hutool.core.util.RandomUtil;
 
 import javax.servlet.http.HttpServletRequest;
-import java.nio.charset.StandardCharsets;
+import javax.validation.constraints.NotNull;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -59,12 +56,26 @@ public class UserServiceimpl implements UserService {
     private HttpServletRequest request;
     @Autowired
     RoleService roleService;
+    @Autowired
+    RedisService redisService;
+    @Autowired
+    ResourceService resourceService;
+    @Autowired
+    UserProfileService upService;
     @Override
     public User getUserByUsername(String username) {
         User user = userDao.findUserByUsername(username);
         return user;
     }
-
+    @Override
+    public User getUserByuid(Long uid) {
+        User user = userDao.findUserById(uid);
+        if (user==null){
+            throw new GlobalException("805X08","用户不存在");
+        }
+        //user.setUserpros(upService.getuserproinfo(uid));
+        return user;
+    }
     @Override
     public UserDto loadUserByUsername(String username) {
         User user = getUserByUsername(username);
@@ -90,18 +101,30 @@ public class UserServiceimpl implements UserService {
         return userDao.findAll(pageable);
     }
 
+
+
     @Override
-    public User getUserByuid(Long uid) {
-        User user = userDao.findUserById(uid);
-        if (user==null){
-            throw new GlobalException("805X08","用户不存在");
+    public Userinfo getcurrentuserinfo() {
+        Long uid = getcurrertuserid();
+        Userinfo userinfodb = (Userinfo) redisService.get("ums:cu:"+uid);
+        if (userinfodb!=null){
+            return userinfodb;
+        }else
+        {
+        Userinfo userinfo = new Userinfo();
+        userinfo.setId(uid);
+        userinfo.setNickname(getcurrertusername());
+        userinfo.setRoles(RequestUtils.getRoleIds());
+        userinfo.setPerms(resourceService.listPermissionURLsByUser(uid));
+        userinfo.setAvatar(upService.getuserproinfo(uid).getPhoto());
+        redisService.set("ums:cu:"+uid,userinfo,600);
+        return userinfo;
         }
-        return user;
     }
 
     @Override
-    public int register(String username, String password, String email, String authcode) {
-        if (!checkcode(email, authcode)){return 3;}
+    public int register(@NotNull String username,@NotNull String password,@NotNull String email, String authcode) {
+        checkcode(email, authcode);
         if (getUserByUsername(username)!=null){return 2;}
         User user = new User();
         user.setUsername(username);
@@ -114,60 +137,91 @@ public class UserServiceimpl implements UserService {
         user.setAccountNonExpired(true);
         user.setAccountNonLocked(true);
         user.setCredentialsNonExpired(true);
+        Date now= new Date();
+        Long time = now.getTime();
+        user.setCreateBy("1");
+        user.setCreateTime(time);
+        user.setLastmodifiedBy("1");
+        user.setUpdateTime(time);
         userDao.save(user);
         return 1;
     }
-
+    @Override
+    public int updateuser(User user) {
+        userDao.save(user);
+        upService.modify(user.getUserpros());
+        return 1;
+    }
     @Override
     public int extendUserinfo(Userpro userpro) {
-        userpro.setUid(getUserByuid(userpro.getUid()).getId());
-        return 1;
+        int status = upService.initUserPro(userpro);
+        return status;
     }
 
     @Override
-    public int sendregmail(String username, String email) {
+    public int sendregmail(String username, @NotNull String email) {
+        String dbcode = userCacheService.getAuthCode(email);
+        if (dbcode!=null){
+            return 1;
+        }
         userCacheService.setAuthCode(email,RandomUtil.randomNumbers(6));
         return 1;
     }
 
     @Override
-    public boolean checkcode(String mail, String code) {
+    public boolean checkcode(@NotNull String mail, @NotNull String code) {
         try{
         String dbcode = userCacheService.getAuthCode(mail);
         if (dbcode.equals(code)){
             userCacheService.delAuthCode(mail);
             return true;}
-        return false;}catch (Exception e){
-            return  false;
+        }catch (Exception e){
+            throw new GlobalException("autherror","验证码核验失败，请重试");
         }
+        return false;
     }
 
     @Override
     public int updatepassword(String email, String password, String authcode) {
+        checkcode(email,authcode);
+
         return 0;
     }
 
     @Override
-    public User getCurrentUser() throws ParseException, JOSEException {
-        String header = request.getHeader("Authorization");
-        String token = StrUtil.subAfter(header, "Bearer ", false);
-        JWSObject jwsObject = JWSObject.parse(token);
-        String payload = jwsObject.getPayload().toString();
-        Payload payloadDto = JSONUtil.toBean(payload, Payload.class);
-        return getUserByuid(payloadDto.getId());
+    public int resetpwd(Long uid) {
+        User user = getUserByuid(uid);
+        String pwd = passwordEncoder.encode("123456");
+        user.setPassword(pwd);
+        Date now= new Date();
+        Long time = now.getTime();
+        user.setCreateBy(getcurrertusername());
+        user.setCreateTime(time);
+        user.setLastmodifiedBy(getcurrertusername());
+        user.setUpdateTime(time);
+        userDao.save(user);
+        return 1;
+    }
+
+    public boolean checkpwd(Long uid, String password){
+        User user = getUserByuid(uid);
+        if (user==null){throw new GlobalException("usererror","用户不存在");}
+        if(!user.getPassword().equals(passwordEncoder.encode(password))){throw new GlobalException("usererror","密码错误！");}
+        return true;
     }
     @Override
-    public String getcurrertusername() {
-        try {
-            String header = request.getHeader("Authorization");
-            String token = StrUtil.subAfter(header, "Bearer ", false);
-            JWSObject jwsObject = JWSObject.parse(token);
-            String payload = jwsObject.getPayload().toString();
-            Payload payloadDto = JSONUtil.toBean(payload, Payload.class);
-            return payloadDto.getUser_name();
-        }catch (ParseException p){
-            return "error";
-        }
+    public User getCurrentUser()  {
+        return getUserByuid(getcurrertuserid());
+    }
+    @Override
+    public String getcurrertusername() { return RequestUtils.getUsername(); }
+
+    @Override
+    public Long getcurrertuserid() {
+//            String userStr = request.getHeader(AuthConstant.USER_TOKEN_HEADER);
+//            Payload userDto = JSONUtil.toBean(userStr, Payload.class);
+//            return userDto.getId();
+            return RequestUtils.getUserId();
 
     }
 
@@ -183,24 +237,44 @@ public class UserServiceimpl implements UserService {
     }
 
     @Override
-    public ResponseData login(String Username, String password) {
+    public CommonResult login(String Username, String password) throws ParseException {
         if(StrUtil.isEmpty(Username)||StrUtil.isEmpty(password)){
             throw new GlobalException("810:","用户名或密码不能为空！");
         }
+        User user = getUserByUsername(Username);
+        if (user==null){
+            throw new GlobalException("","用户名或密码错误");
+        }
         Map<String, String> params = new HashMap<>();
-        params.put("client_id", AuthConstant.PORTAL_CLIENT_ID);
+        params.put("client_id", AuthConstant.ADMIN_CLIENT_ID);
         params.put("client_secret","123456");
         params.put("grant_type","password");
-
         params.put("username",Username);
         params.put("password",password);
+        CommonResult restResult =  authService.getAccessToken(params);
+        //if (result.get("code").equals("200")){
+        if (ResultCode.SUCCESS.getCode()==restResult.getRspCode()&&restResult.getData()!=null){
+            return restResult;
+        }
+        return restResult;
+    }
+
+    @Override
+    public CommonResult renewtoken(String token) {
+        Map<String, String> params = new HashMap<>();
+        params.put("client_id", AuthConstant.ADMIN_CLIENT_ID);
+        params.put("client_secret","123456");
+        params.put("grant_type","refresh_token");
+        params.put("refresh_token",token);
         return authService.getAccessToken(params);
     }
 
     @Override
-    public int banuser(Long uid,int reson) {
+    public int userstatus(Long uid,int status,String reson) {
         User user = getUserByuid(uid);
-        switch (reson) {
+        String jti = (String) redisService.get(AuthConstant.User_Auth_KEY+uid);
+        redisService.set(AuthConstant.User_Black_Table_KEY+":"+jti,"1",3600);
+        switch (status) {
             case 1:
                 user.setAccountNonLocked(false);
             case 2:
@@ -209,8 +283,21 @@ public class UserServiceimpl implements UserService {
                 user.setAccountNonExpired(false);
             case 4:
                 user.setEnabled(false);
+            case 5:
+                user.setAccountNonLocked(true);
+                user.setCredentialsNonExpired(true);
+                user.setAccountNonExpired(true);
+                user.setEnabled(true);
+                redisService.del(AuthConstant.User_Black_Table_KEY+":"+jti);
         }
         userDao.save(user);
         return 1;
     }
+
+    @Override
+    public int deluser(Long id) {
+        userDao.deleteById(id);
+        return 1;
+    }
 }
+

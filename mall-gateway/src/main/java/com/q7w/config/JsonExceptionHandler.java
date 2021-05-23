@@ -9,6 +9,7 @@ package com.q7w.config;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.web.ErrorProperties;
 import org.springframework.boot.autoconfigure.web.ResourceProperties;
 import org.springframework.boot.autoconfigure.web.reactive.error.DefaultErrorWebExceptionHandler;
@@ -29,6 +30,7 @@ import org.springframework.web.reactive.function.server.ServerResponse;
  * @author yinjihuan
  *
  */
+@Slf4j
 public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
 
     public JsonExceptionHandler(ErrorAttributes errorAttributes, ResourceProperties resourceProperties,
@@ -98,7 +100,8 @@ public class JsonExceptionHandler extends DefaultErrorWebExceptionHandler {
         Map<String, Object> map = new HashMap<>();
         map.put("rspCode", "501");
         map.put("rspMsg", "网关:服务暂不可用");
-        map.put("data", "服务暂时不可用，请稍后重试"+errorMessage);
+        map.put("data", "服务暂时不可用，请稍后重试");
+        log.error(errorMessage);
         return map;
     }
 

@@ -5,11 +5,14 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSONUtil;
 
 import com.q7w.common.constant.AuthConstant;
+import com.q7w.common.domain.Payload;
 import com.q7w.common.domain.UserDto;
 import com.q7w.common.service.RedisService;
+import com.q7w.component.RestAuthenticationEntryPoint;
 import com.q7w.config.IgnoreUrlsConfig;
 import com.nimbusds.jose.JWSObject;
 import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,6 +21,7 @@ import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authorization.AuthorizationDecision;
 import org.springframework.security.authorization.ReactiveAuthorizationManager;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.server.authorization.AuthorizationContext;
 import org.springframework.stereotype.Component;
@@ -27,10 +31,7 @@ import reactor.core.publisher.Mono;
 
 import java.net.URI;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -40,6 +41,7 @@ import java.util.stream.Collectors;
 @Component
 @ConfigurationProperties("secure.ignore")
 @Data
+@Slf4j
 public class AuthorizationManager implements ReactiveAuthorizationManager<AuthorizationContext> {
     private List<String> adminurls;
     @Autowired
@@ -53,6 +55,7 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
     public Mono<AuthorizationDecision> check(Mono<Authentication> mono, AuthorizationContext authorizationContext) {
         ServerHttpRequest request = authorizationContext.getExchange().getRequest();
         URI uri = request.getURI();
+        String restPath = request.getMethodValue() + "_" + request.getURI().getPath();
         PathMatcher pathMatcher = new AntPathMatcher();
         //白名单路径直接放行
         List<String> ignoreUrls = ignoreUrlsConfig.getUrls();
@@ -65,58 +68,41 @@ public class AuthorizationManager implements ReactiveAuthorizationManager<Author
         if(request.getMethod()==HttpMethod.OPTIONS){
             return Mono.just(new AuthorizationDecision(true));
         }
-        //不同用户体系登录不允许互相访问
-        try {
-            String token = request.getHeaders().getFirst(AuthConstant.JWT_TOKEN_HEADER);
-            if(StrUtil.isEmpty(token)){
-                return Mono.just(new AuthorizationDecision(false));
-            }
-            if(!StrUtil.contains(token,AuthConstant.JWT_TOKEN_PREFIX)){
-                return Mono.just(new AuthorizationDecision(false));
-            }
-            String realToken = token.replace(AuthConstant.JWT_TOKEN_PREFIX, "");
-            JWSObject jwsObject = JWSObject.parse(realToken);
-            String userStr = jwsObject.getPayload().toString();
-            UserDto userDto = JSONUtil.toBean(userStr, UserDto.class);
-            //管理员不可以访问普通用户页面（已取消）
-//            if (AuthConstant.ADMIN_CLIENT_ID.equals(userDto.getClientId()) && !pathMatcher.match(AuthConstant.ADMIN_URL_PATTERN, uri.getPath())) {
-//                return Mono.just(new AuthorizationDecision(false));
-//            }
-            //普通用户不可以访问管理员页面
-//            if (AuthConstant.PORTAL_CLIENT_ID.equals(userDto.getClientId()) && pathMatcher.match(AuthConstant.ADMIN_URL_PATTERN, uri.getPath())) {
-//                return Mono.just(new AuthorizationDecision(false));
-//            }
-
-            //用户直接访问端路径直接放行
-//        if (pathMatcher.match(AuthConstant.ADMIN_URL_PATTERN, uri.getPath())) {
-//            return Mono.just(new AuthorizationDecision(true));
-//        }
-
-            List<String> manageurls = adminurls;
-            for (String adminurl : manageurls) {
-                if (pathMatcher.match(adminurl, uri.getPath()) && !AuthConstant.ADMIN_CLIENT_ID.equals(userDto.getClientId())) {
-                    return Mono.just(new AuthorizationDecision(false));
-                }
-            }
-        } catch (ParseException e) {
-            e.printStackTrace();
+        //token请求头检查
+        String token = request.getHeaders().getFirst(AuthConstant.JWT_TOKEN_HEADER);
+        if(!StrUtil.contains(token,AuthConstant.JWT_TOKEN_PREFIX)){
             return Mono.just(new AuthorizationDecision(false));
         }
+//
 
+        List<String> manageurls = adminurls;
+        // 非管理端路径直接放行
+//        if(null != manageurls&& !Arrays.asList(manageurls).contains(uri.getPath())){
+//            return Mono.just(new AuthorizationDecision(true));
+//        }
+        if(!pathMatcher.match(adminurls.get(0), uri.getPath())){
+            return Mono.just(new AuthorizationDecision(true));
+        }
+//            for (String adminurl : manageurls) {
+//                if (pathMatcher.match(adminurl, uri.getPath()) && !AuthConstant.ADMIN_CLIENT_ID.equals(userDto.getClient_id())) {
+//                    return Mono.just(new AuthorizationDecision(false));
+//                }
+//            }
         //管理端路径需校验权限
      //   Map<Object, Object> resourceRolesMap = redisTemplate.opsForHash().entries(AuthConstant.RESOURCE_ROLES_MAP_KEY);
         Map<Object, Object> resourceRolesMap =redisService.hGetAll(AuthConstant.RESOURCE_ROLES_MAP_KEY);
-        redisService.set("test","value",600);
         Iterator<Object> iterator = resourceRolesMap.keySet().iterator();
         List<String> authorities = new ArrayList<>();
+        //Set<String> authorities = new HashSet<>();
         while (iterator.hasNext()) {
             String pattern = (String) iterator.next();
-            if (pathMatcher.match(pattern, uri.getPath())) {
+            if (pathMatcher.match(pattern, restPath)) {
                 authorities.addAll(Convert.toList(String.class, resourceRolesMap.get(pattern)));
             }
         }
         authorities = authorities.stream().map(i -> i = AuthConstant.AUTHORITY_PREFIX + i).collect(Collectors.toList());
         //认证通过且角色匹配的用户可访问当前路径
+        log.info("path：{},user_role：{}", restPath,authorities);
         return mono
                 .filter(Authentication::isAuthenticated)
                 .flatMapIterable(Authentication::getAuthorities)

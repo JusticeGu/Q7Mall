@@ -5,6 +5,7 @@ public enum ExceptionMsg {
     SUCCESS_LOGIN("200", "登录成功"),
     FAILED_403("403","资源禁止访问"),
     Unauthorized("401","验证失败"),
+    BELOGOUT("401.1","验证失败"),
     FAILED("801","操作失败"),
     ParamError("802", "参数错误！"),
     BADERROR("803", "请求异常！"),

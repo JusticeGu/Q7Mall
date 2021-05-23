@@ -99,23 +99,37 @@ public class ResourceServiceimpl implements ResourceService {
     public List<Resource> listAll() {
         return resourceDao.findAll();
     }
-
+    @Override
+    public List<Resource> listbytype(Integer type) {
+        return resourceDao.findAllByType(type);
+    }
     @Override
     public Map<String,List<String>> initResourceRolesMap() {
         Map<String,List<String>> resourceRoleMap = new TreeMap<>();
-        List<Resource> resourceList = resourceDao.findAll();
+        List<Resource> resourceList = resourceDao.findAllByType(1);//所有路由
         List<Role> roleList = roleDao.findAll();
         List<RoleResource> relationList = roleResourceDao.findAll();
         for (Resource resource : resourceList) {
             Set<Long> roleIds = relationList.stream().filter(item -> item.getPid().equals(resource.getId())).map(RoleResource::getRid).collect(Collectors.toSet());
             List<String> roleNames = roleList.stream().filter(item -> roleIds.contains(item.getId())).map(item -> item.getId() + "_" + item.getName()).collect(Collectors.toList());
-            resourceRoleMap.put(resource.getUrl(),roleNames);
-        }
+            resourceRoleMap.put(resource.getMethod() +"_"+ resource.getUrl(),roleNames);}
+
         redisService.del(AuthConstant.RESOURCE_ROLES_MAP_KEY);
         redisService.hSetAll(AuthConstant.RESOURCE_ROLES_MAP_KEY, resourceRoleMap);
         return resourceRoleMap;
     }
 
+    @Override
+    public List<Resource> listPermsByRoleId(Long rid,Integer type) {
+        List<RoleResource> rps = roleResourceService.findAllByRid(rid);
+        List<Resource> resources = new ArrayList<>();
+        rps.forEach((rp) -> {
+            Resource res = resourceDao.findById(rp.getPid()).get();
+            if (res.getType()==type){
+            resources.add(res);
+            }});
+        return resources;
+    }
     @Override
     public List<Resource> listPermsByRoleId(Long rid) {
         List<RoleResource> rps = roleResourceService.findAllByRid(rid);
@@ -128,10 +142,14 @@ public class ResourceServiceimpl implements ResourceService {
     public Set<String> listPermissionURLsByUser(Long uid) {
         List<Role> roles = roleService.listRolesByUser(uid);
         Set<String> URLs = new HashSet<>();
-
         roles.forEach(r -> {
             List<RoleResource> rps = roleResourceService.findAllByRid(r.getId());
-            rps.forEach(rp -> URLs.add(resourceDao.findById(rp.getPid()).get().getUrl()));
+            rps.forEach((rp) -> {
+                Resource res = resourceDao.findById(rp.getPid()).get();
+                if (res.getType()==2){
+                    URLs.add(res.getUrl());
+                }
+                });
         });
 
         return URLs;

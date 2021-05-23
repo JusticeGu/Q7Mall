@@ -59,12 +59,12 @@ public class RoleServiceimpl implements RoleService {
         List<Role> roles = roleDao.findAll();
         List<Resource> resources;
         List<Menu> menus;
-        for (Role role : roles) {
-            resources = resourceService.listPermsByRoleId(role.getId());
-            menus = menuService.getMenusByRoleId(role.getId());
-            role.setResources(resources);
-            role.setMenus(menus);
-        }
+//        for (Role role : roles) {
+//            resources = resourceService.listPermsByRoleId(role.getId());
+//            menus = menuService.getMenusByRoleId(role.getId());
+//            role.setResources(resources);
+//            role.setMenus(menus);
+//        }
         return roles;
     }
     @Override
@@ -94,7 +94,10 @@ public class RoleServiceimpl implements RoleService {
     public List<Resource> listroleResource(Long roleId) {
         return resourceService.listPermsByRoleId(roleId);
     }
-
+    @Override
+    public List<Resource> listroletypeRes(Long roleId,int type) {
+        return resourceService.listPermsByRoleId(roleId,type);
+    }
     @Override
     public int allocMenu(Long roleId, List<Long> menuIds) {
         roleMenuService.deleteAllByRid(roleId);

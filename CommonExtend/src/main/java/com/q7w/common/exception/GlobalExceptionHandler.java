@@ -37,7 +37,7 @@ public class GlobalExceptionHandler {
      */
     @ExceptionHandler(value = {NullPointerException.class})
     public ResponseData handlerNull(NullPointerException e){
-        return new ResponseData(ExceptionMsg.ParamError,"空指针异常！");
+        return new ResponseData(ExceptionMsg.ParamError,"请检查必填信息是否漏填!");
     }
     /**
      * 处理请求URL缺少必要参数的异常

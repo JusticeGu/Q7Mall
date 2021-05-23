@@ -20,8 +20,8 @@ public class Userpro extends BaseEntity implements Serializable {
     private Long uid;
     private String realname;
     private String phone;
-    private String email;
     private String address;
+    private int sex;
     private String photo;
     private boolean is_varify;//实名认证
     private boolean is_company;//是否机构账号

@@ -1,21 +1,24 @@
 package com.q7w.Service.impl;
 
+import cn.hutool.core.collection.CollectionUtil;
 import com.q7w.DAO.MenuDao;
 import com.q7w.Entity.Menu;
 import com.q7w.Entity.RoleMenu;
-import com.q7w.Entity.User;
 import com.q7w.Entity.UserRole;
 import com.q7w.Service.MenuService;
 import com.q7w.Service.RoleMenuService;
 import com.q7w.Service.UserRoleService;
 import com.q7w.Service.UserService;
+import com.q7w.VO.TreeVO;
 import com.q7w.common.exception.GlobalException;
+import com.q7w.common.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author xiaogu
@@ -31,6 +34,8 @@ public class MenuServiceimpl implements MenuService {
     UserRoleService userRoleService;
     @Autowired
     RoleMenuService roleMenuService;
+    @Autowired
+    private RedisService redisService;
     private Menu findmenubyname(String name){
         return menuDao.findByName(name);
     }
@@ -51,10 +56,10 @@ public class MenuServiceimpl implements MenuService {
     public int update(Long id, Menu menu) {
         Menu menudb = findmenubyid(id);
         menudb.setName(menu.getName());
-        menudb.setNameZh(menu.getNameZh());
+        menudb.setLabel(menu.getLabel());
         menudb.setComponent(menu.getComponent());
         menudb.setIconCls(menu.getIconCls());
-        menudb.setNameZh(menu.getNameZh());
+        menudb.setLabel(menu.getLabel());
         menuDao.save(menudb);
         return 1;
     }
@@ -72,10 +77,29 @@ public class MenuServiceimpl implements MenuService {
     }
 
     @Override
-    public List<Menu> list() {
-        return menuDao.findAll();
+    public List list() {
+        List<Menu> menus = menuDao.findAll();
+        handleMenus(menus);
+        return menus;
     }
 
+    public static List<TreeVO> recursionForTreeSelect(Long parentId, List<Menu> menuList) {
+        List<TreeVO> list = new ArrayList<>();
+        Optional.ofNullable(menuList).orElse(new ArrayList<>())
+                .stream()
+                .filter(menu -> menu.getParentId().equals(parentId))
+                .forEach(menu -> {
+                    TreeVO treeVO = new TreeVO();
+                    treeVO.setId(menu.getId());
+                    treeVO.setLabel(menu.getName());
+                    List<TreeVO> children = recursionForTreeSelect(menu.getId(), menuList);
+                    if (CollectionUtil.isNotEmpty(children)) {
+                        treeVO.setChildren(children);
+                    }
+                    list.add(treeVO);
+                });
+        return list;
+    }
     @Override
     public List<Menu> getAllByParentId(Long parentId) {
         return menuDao.findAllByParentId(parentId);
@@ -83,11 +107,12 @@ public class MenuServiceimpl implements MenuService {
 
     @Override
     public List<Menu> getMenusByCurrentUser() {
-        String username = userService.getcurrertusername();
-        User user = userService.getUserByUsername(username);
-        List<UserRole> userRoleList =userRoleService.listAllByUid(user.getId());
+        Long uid = userService.getcurrertuserid();
+        Object usermenu = redisService.get("menus:uid:"+uid);
+        if(usermenu == null){
+       // User user = userService.getUserByUsername(username);
+        List<UserRole> userRoleList =userRoleService.listAllByUid(uid);
         List<Menu> menus = new ArrayList<>();
-
         userRoleList.forEach(ur -> {
             List<RoleMenu> rms = roleMenuService.findAllByRid(ur.getRid());
             rms.forEach(rm -> {
@@ -99,7 +124,11 @@ public class MenuServiceimpl implements MenuService {
             });
         });
         handleMenus(menus);
-        return menus;
+        redisService.set("menus:uid:"+uid,menus,3600);
+        return menus;}
+        else {
+            return (List<Menu>)usermenu;
+        }
     }
 
     @Override

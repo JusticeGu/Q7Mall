@@ -64,4 +64,5 @@ public interface RoleService {
 //    @Transactional
     int allocResource(Long roleId, List<Long> resourceIds);
     int allocuserrole(Long uid,List<Long> rids);
+    List<Resource> listroletypeRes(Long roleId,int type);
 }

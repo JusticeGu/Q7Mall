@@ -1,4 +1,5 @@
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/controller/ResourseController.java
+/Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/DAO/UserProDao.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/controller/KeyPairController.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Entity/Menu.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/DAO/RoleDao.java
@@ -11,12 +12,14 @@
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Service/impl/MenuServiceimpl.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/DAO/RoleMenuDao.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Q7mallUserServiceApplication.java
+/Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Entity/OpenIdJson.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Service/impl/UserCacheServiceimpl.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Service/UserCacheService.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/controller/MenuController.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Entity/Company.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/DTO/Payload.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/DAO/MenuDao.java
+/Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Service/impl/UserProfileServiceimpl.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Service/impl/ResourceServiceimpl.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Entity/RoleResource.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/controller/UserServiceController.java
@@ -24,6 +27,7 @@
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Service/RoleMenuService.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Entity/Role.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Service/AdminService.java
+/Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Service/UserProfileService.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Entity/Userpro.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Service/AuthService.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/DAO/UserDao.java
@@ -40,6 +44,7 @@
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/DTO/base/OutputConverter.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Entity/UserRole.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/config/SwaggerConfig.java
+/Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/VO/Userinfo.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/config/Oauth2ServerConfig.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Service/impl/UserServiceimpl.java
 /Users/gxj/Documents/Q7Mall/UserService/src/main/java/com/q7w/Entity/RoleMenu.java
