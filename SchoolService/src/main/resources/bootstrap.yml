@@ -1,0 +1,57 @@
+server:
+  port: 8070
+
+spring:
+  application:
+    name: SchoolCoreService
+  boot:
+    admin:
+      client:
+        url: http://127.0.0.1:8848
+  cloud:
+    nacos:
+      discovery:
+        server-addr: http://127.0.0.1:8848
+      config:
+        server-addr: http://127.0.0.1:8848
+        file-extension: yaml
+  main:
+    allow-bean-definition-overriding: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" #暴露所有节点
+    health:
+      sensitive: false #关闭过滤敏感信息
+  endpoint:
+    health:
+      show-details: ALWAYS  #显示详细信息
+
+feign:
+  hystrix:
+    enabled: true
+  httpclient:
+    enabled: true
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          strategy: SEMAPHORE
+          thread:
+            timeoutInMilliseconds: 60000
+
+# 自定义redis key
+redis:
+  database: q7mall
+  key:
+    authCode: 'authCode'
+    orderId: 'orderId'
+    member: 'member'
+  expire:
+    authCode: 90 # 验证码超期时间
+    common: 86400 # 24小时
