@@ -55,7 +55,7 @@ public class ScoreController {
     @GetMapping("/stugetscorelist")
     @ApiOperation("考生所有成绩列表")
     public ResponseData stuscorelist(@RequestParam Long uid){
-        List<Score> scoreList = scoreService.getScorebyuid(uid,true);
+        List<Score> scoreList = scoreService.getScorebyuid(uid,false);
         if (scoreList.size()!=0){return new ResponseData(ExceptionMsg.SUCCESS,scoreList); }
         return new ResponseData(ExceptionMsg.FAILED,"暂无可查询成绩");
     }

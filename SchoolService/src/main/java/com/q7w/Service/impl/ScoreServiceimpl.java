@@ -73,13 +73,20 @@ public class ScoreServiceimpl implements ScoreService {
         scorelist.getScoreList().forEach(stu -> {
             try {
                 //Score scoredb = scoreDao.findAllByUid(stu.getId()).get(0);
-                Score scoredb = scoreDao.findByCourseAndExamAndUid(scorelist.getCourse(),scorelist.getExam(),stu.getUid());
+                //Score scoredb = scoreDao.findByCourseAndExamAndUid(scorelist.getCourse(),scorelist.getExam(),stu.getUid());
+                Score scoredb = new Score();
+                scoredb.setExam(scorelist.getExam());
+                scoredb.setUid(stu.getUid());
+                scoredb.setCid(stu.getCid());
+                scoredb.setName(stu.getName());
+                scoredb.setCourse(scorelist.getCourse());
                 scoredb.setScore(stu.getScore());
                 scoredb.setExscore(stu.getExscore());
                 scoredb.setFinalscore(stu.getScore()*examCourse.getNorpercent()
                         +stu.getExscore()*(100-examCourse.getNorpercent()));
-                scoredb.setContent("正考成绩");
+                scoredb.setContent("【正考成绩】"+stu.getContent());
                 scoredb.setStatus(2);
+                scoredb.setType((byte)1);
                 scoreDao.save(scoredb);
             }catch (Exception e){
                 errs.add(stu.getUid());
